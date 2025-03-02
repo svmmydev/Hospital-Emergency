@@ -1,0 +1,36 @@
+# Binarios y Objetos compilados
+bin/
+obj/
+*.exe
+*.dll
+*.pdb
+*.cache
+
+# Archivos de configuración de usuario (Visual Studio)
+.vs/
+*.user
+*.suo
+
+# Dependencias de NuGet y .NET
+packages/
+project.lock.json
+*.nuget.props
+*.nuget.targets
+
+# Configuración de IDEs (Visual Studio Code, Rider, JetBrains)
+.vscode/
+.idea/
+*.sln.ide
+
+# Archivos de Log y Debug
+*.log
+logs/
+debug.log
+
+# Archivos de publicación
+.publish/
+out/
+
+# Archivos generados de Mac/Linux
+.DS_Store
+Thumbs.db

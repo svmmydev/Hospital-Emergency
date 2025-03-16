@@ -16,14 +16,14 @@ internal class Program
     /// </summary>
     private static void Main(string[] args)
     {
-        Console.WriteLine("Patients are entering the hospital..\n");
+        Console.WriteLine("\nPatients are entering the hospital..\n");
 
         // Simulates the arrival of patients at intervals.
         for (int i = 1; i <= totalPatients; i++)
         {
-            int arrivalPriorityNum = i;
+            int arrivalOrderNum = i;
 
-            Patient patient = new Patient(rnd.Next(1,101), arrivalPriorityNum, rnd.Next(5,16));
+            Patient patient = new Patient(rnd.Next(1,101), arrivalOrderNum, rnd.Next(5,16));
 
             Thread patientProccess = new Thread(() => PatientArrival(patient));
             patientProccess.Start();
@@ -39,17 +39,17 @@ internal class Program
     /// <param name="Patient">The patient with all of his properties.</param>
     private static void PatientArrival(Patient patient)
     {
-        Console.WriteLine($"Patient has arrived. ID: {patient.Id} and Priority: {patient.HospitalArrivalPriority}.");
+        Console.WriteLine($"Patient has arrived. ID: {patient.Id} and arrival order number: {patient.HospitalArrival}.");
 
         consultSem.Wait();
         Doctor assignedDoctor = Doctor.AssignDoctor();
-        Console.WriteLine($"Patient with ID: {patient.Id} is actually entering a consult with Doctor {assignedDoctor.Id}.\n");
 
         patient.Status = PatientStatus.InConsultation;
         Thread.Sleep(patient.ConsultationTime * 1000);
 
         patient.Status = PatientStatus.Finished;
-        Doctor.ReleaseDoctor(assignedDoctor, patient.Id);
+        Console.WriteLine($"Patient with ID: {patient.Id} and arrival order number: {patient.HospitalArrival} has finished the consultation.");
+        assignedDoctor.ReleaseDoctor();
         consultSem.Release();
     }
 }

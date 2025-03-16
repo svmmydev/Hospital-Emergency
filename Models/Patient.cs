@@ -1,40 +1,126 @@
 ﻿
-namespace hospital_urgencias.Models;
+namespace HospitalUrgencias.Models;
 
+
+/// <summary>
+/// Enum representing the patient's status in the hospital.
+/// </summary>
+public enum PatientStatus
+{
+    Waiting,
+    InConsultation,
+    Finished   
+}
+
+
+/// <summary>
+/// Represents a patient in the hospital.
+/// </summary>
 public class Patient
 {
+    // Common variables
+    private Timer? waitingTimer;
+    public bool TimerRunning { get; private set; }
+
+    // Properties
+    public int Id {get; set;}
+    public int HospitalArrival {get; set;}
+    public int ConsultationTime {get; set;}
+    public PatientStatus Status {get; set;} = PatientStatus.Waiting;
+    public int WaitingTime {get; private set;}
+    
+
     /// <summary>
-    /// Enum representing the patient's status in the hospital.
+    /// Initializes a new instance of the patient class.
     /// </summary>
-    public enum PatientStatus
+    /// <param name="Id">The unique identification number of the doctor.</param>
+    /// <param name="HospitalArrival">The patient's waiting time.</param>
+    /// <param name="ConsultationTime">The consultation time the patient needs.</param>
+    /// <param name="startTimer">The patient's waiting timer.</param>
+    public Patient (int Id, int HospitalArrival, int ConsultationTime, bool startTimer = false)
     {
-        Waiting,
-        InConsultation,
-        Finished   
+        this.Id = Id;
+        this.HospitalArrival = HospitalArrival;
+        this.ConsultationTime = ConsultationTime;
+        
+        if (startTimer)
+        {
+            waitingTimer = new Timer(IncrementWaitingTime, null, 0, 1000);
+        }
     }
 
 
     /// <summary>
-    /// Represents a patient in the hospital.
+    /// Pauses the waiting timer without liberarlo.
     /// </summary>
-    public class Patient
+    public void PauseWaitingTimer()
     {
-        public int Id {get; set;}
-        public int HospitalArrival {get; set;}
-        public int ConsultationTime {get; set;}
-        public PatientStatus Status {get; set;}
-
-        /// <summary>
-        /// Initializes a new instance of the patient class.
-        /// </summary>
-        /// <param name="Id">The unique identification number of the doctor.</param>
-        /// <param name="HospitalArrival">The patient's waiting time.</param>
-        /// <param name="ConsultationTime">The consultation time the patient needs.</param>
-        public Patient (int Id, int HospitalArrival, int ConsultationTime)
+        if (waitingTimer != null)
         {
-            this.Id = Id;
-            this.HospitalArrival = HospitalArrival;
-            this.ConsultationTime = ConsultationTime;
+            waitingTimer.Change(Timeout.Infinite, Timeout.Infinite);
+            TimerRunning = false;
         }
+    }
+
+
+    /// <summary>
+    /// Resumes the waiting timer if it was paused.
+    /// </summary>
+    public void ResumeWaitingTimer()
+    {
+        if (waitingTimer != null && !TimerRunning)
+        {
+            waitingTimer.Change(1000, 1000);
+            TimerRunning = true;
+        }
+    }
+
+
+    /// <summary>
+    /// Stops and disposes the waiting timer.
+    /// </summary>
+    public void StopWaitingTimer()
+    {
+        if (waitingTimer != null)
+        {
+            waitingTimer.Change(Timeout.Infinite, Timeout.Infinite);
+            waitingTimer.Dispose();
+            waitingTimer = null;
+            TimerRunning = false;
+        }
+    }
+
+
+    private void IncrementWaitingTime(object? state)
+    {
+        WaitingTime++;
+    }
+
+
+    public void ChangingPatientStatus(PatientStatus patientStatus)
+    {
+        Status = patientStatus;
+
+        string statusMsg;
+
+        switch (Status)
+        {
+            case PatientStatus.InConsultation:
+                statusMsg = $"Waiting duration: {WaitingTime}";
+                break;
+            case PatientStatus.Finished:
+                statusMsg = $"Consult duration: {ConsultationTime}";
+                break;
+            default:
+                statusMsg = "";
+                break;
+        }
+
+        Console.WriteLine(
+            $"Patient {Id}. " +
+            $"Arrived at {HospitalArrival}. " +
+            $"Status: {patientStatus}. " +
+            $"{statusMsg}."
+        );
     }
 }

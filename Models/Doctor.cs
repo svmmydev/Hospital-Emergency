@@ -6,13 +6,25 @@ namespace HospitalUrgencias.Models;
 /// </summary>
 public class Doctor
 {
-    // Common variables
-    static readonly object locker = new object();
-    static readonly Random rnd = new Random();
-
     // Properties
     public int Id {get; set;}
+    public string ReferenceName {get; private set;}
     public bool IsAvailable {get; set;} = true;
+
+
+    // Common variables
+    static readonly object locker = new object();
+
+
+    // Doctor list
+    private static readonly List<Doctor> Doctors = new List<Doctor>
+    {
+        new Doctor(1),
+        new Doctor(2),
+        new Doctor(3),
+        new Doctor(4)
+    };
+
 
     /// <summary>
     /// Initializes a new instance of the doctor class.
@@ -21,7 +33,9 @@ public class Doctor
     public Doctor(int Id)
     {
         this.Id = Id;
+        ReferenceName = $"Doctor {Id}";
     }
+
 
     /// <summary>
     /// Selects a random available doctor.
@@ -37,11 +51,11 @@ public class Doctor
         {
             lock (locker)
             {
-                var availableDoctors = HospitalData.Doctors.Where(d => d.IsAvailable).ToList(); 
+                var availableDoctors = Doctors.Where(d => d.IsAvailable).ToList(); 
 
                 if (availableDoctors.Count > 0)
                 {
-                    selectedDoctor = availableDoctors[rnd.Next(availableDoctors.Count)];
+                    selectedDoctor = availableDoctors[Hospital.rnd.Next(availableDoctors.Count)];
                     selectedDoctor.IsAvailable = false;
                     return selectedDoctor;
                 }

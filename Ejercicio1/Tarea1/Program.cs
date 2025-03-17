@@ -6,10 +6,6 @@ using HospitalUrgencias.Models;
 /// </summary>
 internal class Program
 {
-    static readonly int totalPatients = 4;
-    static readonly SemaphoreSlim consultSem = new SemaphoreSlim(4);
-
-
     /// <summary>
     /// Entry point of the program. Simulates patient arrivals.
     /// </summary>
@@ -18,7 +14,7 @@ internal class Program
         Console.WriteLine("\nPatients are entering the hospital..\n");
 
         // Simulates the arrival of patients at intervals.
-        for (int i = 1; i <= totalPatients; i++)
+        for (int i = 1; i <= Hospital.totalPatients; i++)
         {
             int arrivalOrderNumber = i;
 
@@ -39,14 +35,14 @@ internal class Program
     {
         Console.WriteLine($"Patient has arrived. Arrival order number: {arrivalOrderNumber}.");
 
-        consultSem.Wait();
+        Hospital.consultSem.Wait();
         Doctor assignedDoctor = Doctor.AssignDoctor();
 
         Thread.Sleep(ConsultationTime);
 
         Console.WriteLine($"Patient with arrival order number: {arrivalOrderNumber} has finished the consultation.");
         assignedDoctor.ReleaseDoctor();
-        consultSem.Release();
+        Hospital.consultSem.Release();
     }
 
 }

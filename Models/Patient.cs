@@ -18,18 +18,19 @@ public enum PatientStatus
 /// </summary>
 public class Patient
 {
+    // Properties
+    public int Id {get; private set;}
+    public int HospitalArrival {get; private set;}
+    public int ConsultationTime {get; private set;}
+    public PatientStatus Status {get; set;} = PatientStatus.Waiting;
+    public int WaitingTime {get; private set;}
+
+
     // Common variables
     private Timer? waitingTimer;
     public bool TimerRunning { get; private set; }
 
-    // Properties
-    public int Id {get; set;}
-    public int HospitalArrival {get; set;}
-    public int ConsultationTime {get; set;}
-    public PatientStatus Status {get; set;} = PatientStatus.Waiting;
-    public int WaitingTime {get; private set;}
     
-
     /// <summary>
     /// Initializes a new instance of the patient class.
     /// </summary>
@@ -97,7 +98,7 @@ public class Patient
     }
 
 
-    public void ChangingPatientStatus(PatientStatus patientStatus)
+    public void ChangingPatientStatus(PatientStatus patientStatus, Doctor assignedDoctor)
     {
         Status = patientStatus;
 
@@ -106,10 +107,12 @@ public class Patient
         switch (Status)
         {
             case PatientStatus.InConsultation:
-                statusMsg = $"Waiting duration: {WaitingTime}";
+                statusMsg = $"| Assigned Doctor: {assignedDoctor.ReferenceName} " +
+                            $"| Waiting duration: {WaitingTime}";
                 break;
             case PatientStatus.Finished:
-                statusMsg = $"Consult duration: {ConsultationTime}";
+                statusMsg = $"({assignedDoctor.ReferenceName} is now free) " +
+                            $"| Consultation duration: {ConsultationTime}" ;
                 break;
             default:
                 statusMsg = "";
@@ -117,10 +120,10 @@ public class Patient
         }
 
         Console.WriteLine(
-            $"Patient {Id}. " +
-            $"Arrived at {HospitalArrival}. " +
-            $"Status: {patientStatus}. " +
-            $"{statusMsg}."
+            $"| Patient {Id} " +
+            $"| Arrived as {HospitalArrival} " +
+            $"| Status: {patientStatus} " +
+            $"{statusMsg} |"
         );
     }
 }

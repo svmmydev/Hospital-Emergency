@@ -37,10 +37,12 @@ internal class Program
         Hospital.consultSem.Wait();
         Doctor assignedDoctor = Doctor.AssignDoctor();
 
-        patient.ChangingPatientStatus(PatientStatus.InConsultation, assignedDoctor);
+        string statusMsg = patient.UpdatingPatientStatus(PatientStatus.InConsultation, assignedDoctor);
+        Console.WriteLine(statusMsg);
         Thread.Sleep(patient.ConsultationTime * 1000);
 
-        patient.ChangingPatientStatus(PatientStatus.Finished, assignedDoctor);
+        statusMsg = patient.UpdatingPatientStatus(PatientStatus.Finished, assignedDoctor);
+        Console.WriteLine(statusMsg);
         assignedDoctor.ReleaseDoctor();
         Hospital.consultSem.Release();
     }

@@ -16,16 +16,6 @@ public class Doctor
     static readonly object locker = new object();
 
 
-    // Doctor list
-    private static readonly List<Doctor> Doctors = new List<Doctor>
-    {
-        new Doctor(1),
-        new Doctor(2),
-        new Doctor(3),
-        new Doctor(4)
-    };
-
-
     /// <summary>
     /// Initializes a new instance of the doctor class.
     /// </summary>
@@ -51,7 +41,7 @@ public class Doctor
         {
             lock (locker)
             {
-                var availableDoctors = Doctors.Where(d => d.IsAvailable).ToList(); 
+                var availableDoctors = Hospital.DoctorList.Where(d => d.IsAvailable).ToList(); 
 
                 if (availableDoctors.Count > 0)
                 {

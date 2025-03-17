@@ -1,17 +1,11 @@
 ﻿
 using HospitalUrgencias.Models;
-using Microsoft.VisualBasic;
 
 /// <summary>
 /// Simulates a concurrent medical consultation system.
 /// </summary>
 internal class Program
 {
-    static readonly int totalPatients = 4;
-    static readonly SemaphoreSlim consultSem = new SemaphoreSlim(4);
-    static readonly Random rnd = new Random();
-
-
     /// <summary>
     /// Entry point of the program. Simulates patient arrivals.
     /// </summary>
@@ -20,11 +14,11 @@ internal class Program
         Console.WriteLine("\nPatients are entering the hospital..\n");
 
         // Simulates the arrival of patients at intervals.
-        for (int i = 1; i <= totalPatients; i++)
+        for (int i = 1; i <= Hospital.totalPatients; i++)
         {
             int arrivalOrderNum = i;
 
-            Patient patient = new Patient(rnd.Next(1,101), arrivalOrderNum, rnd.Next(5,16));
+            Patient patient = new Patient(Hospital.rnd.Next(1,101), arrivalOrderNum, Hospital.rnd.Next(5,16));
 
             Thread patientProccess = new Thread(() => PatientArrival(patient));
             patientProccess.Start();
@@ -40,14 +34,14 @@ internal class Program
     /// <param name="Patient">The patient with all of his properties.</param>
     private static void PatientArrival(Patient patient)
     {
-        consultSem.Wait();
+        Hospital.consultSem.Wait();
         Doctor assignedDoctor = Doctor.AssignDoctor();
 
-        patient.ChangingPatientStatus(PatientStatus.InConsultation);
+        patient.ChangingPatientStatus(PatientStatus.InConsultation, assignedDoctor);
         Thread.Sleep(patient.ConsultationTime * 1000);
 
-        patient.ChangingPatientStatus(PatientStatus.Finished);
+        patient.ChangingPatientStatus(PatientStatus.Finished, assignedDoctor);
         assignedDoctor.ReleaseDoctor();
-        consultSem.Release();
+        Hospital.consultSem.Release();
     }
 }

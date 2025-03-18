@@ -11,20 +11,7 @@ internal class Program
     /// </summary>
     private static void Main(string[] args)
     {
-        Console.WriteLine("\nPatients are entering the hospital..\n");
-
-        // Simulates the arrival of patients at intervals.
-        for (int i = 1; i <= Hospital.totalPatients; i++)
-        {
-            int arrivalOrderNum = i;
-
-            Patient patient = new Patient(Hospital.rnd.Next(1,101), arrivalOrderNum, Hospital.rnd.Next(5,16));
-
-            Thread patientProccess = new Thread(() => PatientArrival(patient));
-            patientProccess.Start();
-
-            Thread.Sleep(2000);
-        }
+        Hospital.HospitalProgram(PatientArrival);
     }
 
 
@@ -37,12 +24,12 @@ internal class Program
         Hospital.consultSem.Wait();
         Doctor assignedDoctor = Doctor.AssignDoctor();
 
-        string statusMsg = patient.UpdatingPatientStatus(PatientStatus.InConsultation, assignedDoctor);
-        Console.WriteLine(statusMsg);
+        patient.Status = PatientStatus.InConsultation;
+        ConsoleView.ShowHospitalStatusMessage(patient, assignedDoctor);
         Thread.Sleep(patient.ConsultationTime * 1000);
 
-        statusMsg = patient.UpdatingPatientStatus(PatientStatus.Finished, assignedDoctor);
-        Console.WriteLine(statusMsg);
+        patient.Status = PatientStatus.Finished;
+        ConsoleView.ShowHospitalStatusMessage(patient, assignedDoctor);
         assignedDoctor.ReleaseDoctor();
         Hospital.consultSem.Release();
     }

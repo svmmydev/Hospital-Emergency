@@ -99,38 +99,4 @@ public class Patient
     {
         WaitingTime++;
     }
-
-
-    public string UpdatingPatientStatus(PatientStatus patientStatus, Doctor assignedDoctor, string extraData = "")
-    {
-        Status = patientStatus;
-
-        string statusMsg;
-
-        switch (Status)
-        {
-            case PatientStatus.InConsultation:
-                statusMsg = $"| Assigned Doctor: {assignedDoctor.ReferenceName} " +
-                            $"| Waiting duration: {WaitingTime}";
-                break;
-            case PatientStatus.Finished:
-                statusMsg = $"({assignedDoctor.ReferenceName} is now free) " +
-                            $"| Consultation duration: {ConsultationTime}" ;
-                break;
-            default:
-                statusMsg = "";
-                break;
-        }
-
-        if (!string.IsNullOrEmpty(extraData))
-        {
-            statusMsg += " | " + extraData;
-        }
-
-        return
-            $"| Patient {Id} " +
-            $"| Arrived as {HospitalArrival} " +
-            $"| Status: {patientStatus} " +
-            $"{statusMsg} |";
-    }
 }

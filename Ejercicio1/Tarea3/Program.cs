@@ -21,6 +21,9 @@ internal class Program
     /// <param name="Patient">The patient with all of his properties.</param>
     private static void PatientArrival(Patient patient)
     {
+        // TODO Tricking the program to prevent showing the Diagnostic message by the console
+        patient.RequiresDiagnostic = false;
+
         Hospital.consultSem.Wait();
         Doctor assignedDoctor = Doctor.AssignDoctor();
 

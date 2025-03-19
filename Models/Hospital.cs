@@ -9,8 +9,8 @@ public static class Hospital
     public static readonly Random rnd = new Random();
 
 
-    public static readonly int medicalTestTime = 15000;
     public static readonly int patientArrivalInterval = 2000;
+    public static readonly int medicalTestTime = 15000;
 
     
     // Doctor list
@@ -48,7 +48,7 @@ public static class Hospital
             Thread patientProccess = new Thread(() => action(patient));
             patientProccess.Start();
 
-            Thread.Sleep(2000);
+            Thread.Sleep(patientArrivalInterval);
         }
     }
 }

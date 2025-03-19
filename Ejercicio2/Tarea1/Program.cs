@@ -25,14 +25,29 @@ internal class Program
         Doctor assignedDoctor = Doctor.AssignDoctor();
 
         patient.Status = PatientStatus.InConsultation;
-        ConsoleView.ShowHospitalStatusMessage(patient, assignedDoctor);
+        ConsoleView.ShowHospitalStatusMessage(patient, Doctor: assignedDoctor);
         Thread.Sleep(patient.ConsultationTime * 1000);
 
-        patient.Status = PatientStatus.Finished;
-        ConsoleView.ShowHospitalStatusMessage(patient, assignedDoctor);
         assignedDoctor.ReleaseDoctor();
         Hospital.consultSem.Release();
 
-        //TODO COMPROBAR SI PACIENTE REQUIERE DE UN DIAGNOSTICO Y ENTRAR EN MAQUINA
+        patient.Status = PatientStatus.Finished;
+        ConsoleView.ShowHospitalStatusMessage(patient, Doctor: assignedDoctor);
+
+        if (patient.RequiresDiagnostic)
+        {
+            Hospital.scannerSem.Wait();
+            CTScanner assignedCTScanner = CTScanner.AssignCTScanner();
+
+            patient.Status = PatientStatus.WaitingDiagnostic;
+            ConsoleView.ShowHospitalStatusMessage(patient, CTScanner: assignedCTScanner);
+            Thread.Sleep(Hospital.medicalTestTime);
+
+            patient.RequiresDiagnostic = false;
+            ConsoleView.ShowHospitalStatusMessage(patient, CTScanner: assignedCTScanner);
+            
+            assignedCTScanner.ReleaseCTScanner();
+            Hospital.scannerSem.Release();
+        }
     }
 }

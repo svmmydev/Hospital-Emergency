@@ -9,31 +9,30 @@ public static class ConsoleView
     }
 
 
-    public static void ShowHospitalStatusMessage(Patient patient, Doctor assignedDoctor, CTScanner? cTScanner = null, string extraData = "")
+    public static void ShowHospitalStatusMessage(Patient patient, Doctor? Doctor = null, CTScanner? CTScanner = null, string? extraMsg = null)
     {
         string statusMsg;
 
         switch (patient.Status)
         {
             case PatientStatus.InConsultation:
-                statusMsg = $"| Assigned Doctor: {assignedDoctor.ReferenceName} " +
-                            $"| Waiting duration: {patient.WaitingTime}";
-                break;
-            case PatientStatus.WaitingDiagnostic:
-                statusMsg = $"| Waiting diagnostic results ({cTScanner?.ReferenceName})";
+                statusMsg = $"| Assigned: {Doctor?.ReferenceName} " +
+                            $"| Waiting duration: {patient.WaitingTime}s";
                 break;
             case PatientStatus.Finished:
-                statusMsg = $"({assignedDoctor.ReferenceName} is now free) " +
-                            $"| Consultation duration: {patient.ConsultationTime}" ;
+                statusMsg = $"| Consultation duration: {patient.ConsultationTime}s " +
+                            $"({Doctor?.ReferenceName} is now free)";
+
+                if (patient.RequiresDiagnostic) statusMsg += $" | Waiting for a diagnostic CT Scanner test";
+                break;
+            case PatientStatus.WaitingDiagnostic:
+                if (patient.RequiresDiagnostic) statusMsg = $"| Entering {CTScanner?.ReferenceName}";
+                else statusMsg = $"| Diagnostic completed ({CTScanner?.ReferenceName} is now free)";
+
                 break;
             default:
                 statusMsg = "";
                 break;
-        }
-
-        if (!string.IsNullOrEmpty(extraData))
-        {
-            statusMsg += " | " + extraData;
         }
 
         Console.WriteLine(

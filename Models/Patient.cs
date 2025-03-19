@@ -25,7 +25,7 @@ public class Patient
     public int ConsultationTime {get; private set;}
     public PatientStatus Status {get; set;} = PatientStatus.Waiting;
     public int WaitingTime {get; private set;}
-    public bool RequiresDiagnostic {get; private set;}
+    public bool RequiresDiagnostic {get; set;}
 
 
     // Common variables

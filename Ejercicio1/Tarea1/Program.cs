@@ -11,17 +11,19 @@ internal class Program
     /// </summary>
     private static void Main(string[] args)
     {
-        Console.WriteLine("\nPatients are entering the hospital..\n");
+        ConsoleView.ShowWelcomeMessage();
 
         // Simulates the arrival of patients at intervals.
         for (int i = 1; i <= Hospital.totalPatients; i++)
         {
-            int arrivalOrderNumber = i;
+            int arrivalOrderNum = i;
 
-            Thread patient = new Thread(() => PatientArrival(arrivalOrderNumber, 10000));
+            int consultationTime = 10000;
+
+            Thread patient = new Thread(() => PatientArrival(arrivalOrderNum, consultationTime));
             patient.Start();
 
-            Thread.Sleep(2000);
+            Thread.Sleep(Hospital.patientArrivalInterval);
         }
     }
 

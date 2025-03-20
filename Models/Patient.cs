@@ -9,6 +9,7 @@ public enum PatientStatus
 {
     Waiting,
     InConsultation,
+    WaitingDiagnostic,
     Finished   
 }
 
@@ -24,6 +25,7 @@ public class Patient
     public int ConsultationTime {get; private set;}
     public PatientStatus Status {get; set;} = PatientStatus.Waiting;
     public int WaitingTime {get; private set;}
+    public bool RequiresDiagnostic {get; set;}
 
 
     // Common variables
@@ -43,7 +45,8 @@ public class Patient
         this.Id = Id;
         this.HospitalArrival = HospitalArrival;
         this.ConsultationTime = ConsultationTime;
-        
+        RequiresDiagnostic = Hospital.rnd.Next(0,2) == 1;
+
         if (startTimer)
         {
             waitingTimer = new Timer(IncrementWaitingTime, null, 0, 1000);
@@ -95,35 +98,5 @@ public class Patient
     private void IncrementWaitingTime(object? state)
     {
         WaitingTime++;
-    }
-
-
-    public void ChangingPatientStatus(PatientStatus patientStatus, Doctor assignedDoctor)
-    {
-        Status = patientStatus;
-
-        string statusMsg;
-
-        switch (Status)
-        {
-            case PatientStatus.InConsultation:
-                statusMsg = $"| Assigned Doctor: {assignedDoctor.ReferenceName} " +
-                            $"| Waiting duration: {WaitingTime}";
-                break;
-            case PatientStatus.Finished:
-                statusMsg = $"({assignedDoctor.ReferenceName} is now free) " +
-                            $"| Consultation duration: {ConsultationTime}" ;
-                break;
-            default:
-                statusMsg = "";
-                break;
-        }
-
-        Console.WriteLine(
-            $"| Patient {Id} " +
-            $"| Arrived as {HospitalArrival} " +
-            $"| Status: {patientStatus} " +
-            $"{statusMsg} |"
-        );
     }
 }

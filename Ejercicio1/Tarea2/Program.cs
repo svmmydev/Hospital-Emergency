@@ -6,25 +6,12 @@ using HospitalUrgencias.Models;
 /// </summary>
 internal class Program
 {
-        /// <summary>
+    /// <summary>
     /// Entry point of the program. Simulates patient arrivals.
     /// </summary>
     private static void Main(string[] args)
     {
-        Console.WriteLine("\nPatients are entering the hospital..\n");
-
-        // Simulates the arrival of patients at intervals.
-        for (int i = 1; i <= Hospital.totalPatients; i++)
-        {
-            int arrivalOrderNum = i;
-
-            Patient patient = new Patient(Hospital.rnd.Next(1,101), arrivalOrderNum, Hospital.rnd.Next(5,16));
-
-            Thread patientProccess = new Thread(() => PatientArrival(patient));
-            patientProccess.Start();
-
-            Thread.Sleep(2000);
-        }
+        Hospital.HospitalProgram(PatientArrival);
     }
 
 

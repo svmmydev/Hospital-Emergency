@@ -9,7 +9,7 @@ public static class ConsoleView
     }
 
 
-    public static void ShowHospitalStatusMessage(Patient patient, Doctor? Doctor = null, CTScanner? CTScanner = null, string? extraMsg = null)
+    public static void ShowHospitalStatusMessage(Patient patient, Doctor? Doctor = null, CTScanner? CTScanner = null, bool showDiagnosticMessage = true)
     {
         string statusMsg;
 
@@ -23,7 +23,8 @@ public static class ConsoleView
                 statusMsg = $"| Consultation duration: {patient.ConsultationTime}s " +
                             $"({Doctor?.ReferenceName} is now free)";
 
-                if (patient.RequiresDiagnostic) statusMsg += $" | Waiting for a diagnostic CT Scanner test";
+                // Adds this message to the console if the program enables it through the parameter (showDiagnosticMessage: false?)
+                if (patient.RequiresDiagnostic && showDiagnosticMessage) statusMsg += $" | Waiting for a diagnostic CT Scanner test";
                 break;
             case PatientStatus.WaitingDiagnostic:
                 if (patient.RequiresDiagnostic) statusMsg = $"| Entering {CTScanner?.ReferenceName}";

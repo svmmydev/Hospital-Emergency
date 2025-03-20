@@ -21,18 +21,15 @@ internal class Program
     /// <param name="Patient">The patient with all of his properties.</param>
     private static void PatientArrival(Patient patient)
     {
-        // TODO Tricking the program to prevent showing the Diagnostic message by the console
-        patient.RequiresDiagnostic = false;
-
         Hospital.consultSem.Wait();
         Doctor assignedDoctor = Doctor.AssignDoctor();
 
         patient.Status = PatientStatus.InConsultation;
-        ConsoleView.ShowHospitalStatusMessage(patient, assignedDoctor);
+        ConsoleView.ShowHospitalStatusMessage(patient, Doctor: assignedDoctor);
         Thread.Sleep(patient.ConsultationTime * 1000);
 
         patient.Status = PatientStatus.Finished;
-        ConsoleView.ShowHospitalStatusMessage(patient, assignedDoctor);
+        ConsoleView.ShowHospitalStatusMessage(patient, Doctor: assignedDoctor, showDiagnosticMessage: false);
         assignedDoctor.ReleaseDoctor();
         Hospital.consultSem.Release();
     }

@@ -1,4 +1,6 @@
 ﻿
+using System.Collections.Concurrent;
+
 namespace HospitalUrgencias.Models;
 
 public static class Hospital
@@ -7,6 +9,11 @@ public static class Hospital
     public static readonly SemaphoreSlim consultSem = new SemaphoreSlim(4);
     public static readonly SemaphoreSlim scannerSem = new SemaphoreSlim(2);
     public static readonly Random rnd = new Random();
+
+
+    public static ConcurrentQueue<Patient> PatientQueue = new ConcurrentQueue<Patient>();
+    public static BlockingCollection<Patient> DiagnosticQueue = new BlockingCollection<Patient>(PatientQueue);
+    private static List<Patient> PatientList = new List<Patient>();
 
 
     public static readonly int patientArrivalInterval = 2000;
@@ -39,16 +46,37 @@ public static class Hospital
         for (int i = 1; i <= totalPatients; i++)
         {
             int arrivalOrderNum = i;
+            int Id;
+            bool existentId;
 
-            int Id = rnd.Next(1,101);
+            do{
+                Id = rnd.Next(1,101);
+                existentId = checkingExistentId(Id);
+            }
+            while(existentId);
+
             int consultationTime = rnd.Next(5,16);
 
             Patient patient = new Patient(Id, arrivalOrderNum, consultationTime);
+            PatientList.Add(patient);
+
+            if (patient.RequiresDiagnostic) DiagnosticQueue.Add(patient);
 
             Thread patientProccess = new Thread(() => action(patient));
             patientProccess.Start();
 
             Thread.Sleep(patientArrivalInterval);
         }
+    }
+
+
+    private static bool checkingExistentId(int Id)
+    {
+        foreach(Patient patient in PatientList)
+        {
+            if(patient.Id == Id) return true;
+        }
+
+        return false;
     }
 }

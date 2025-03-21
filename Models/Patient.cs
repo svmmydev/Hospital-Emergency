@@ -45,7 +45,8 @@ public class Patient
         this.Id = Id;
         this.HospitalArrival = HospitalArrival;
         this.ConsultationTime = ConsultationTime;
-        RequiresDiagnostic = Hospital.rnd.Next(0,2) == 1;
+        // RequiresDiagnostic = Hospital.rnd.Next(0,2) == 1;
+        RequiresDiagnostic = true;
 
         if (startTimer)
         {

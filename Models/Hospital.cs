@@ -9,11 +9,13 @@ public static class Hospital
     public static readonly SemaphoreSlim consultSem = new SemaphoreSlim(4);
     public static readonly SemaphoreSlim scannerSem = new SemaphoreSlim(2);
     public static readonly Random rnd = new Random();
+    public static readonly object queueLock = new object();
 
 
     public static ConcurrentQueue<Patient> PatientQueue = new ConcurrentQueue<Patient>();
     public static BlockingCollection<Patient> DiagnosticQueue = new BlockingCollection<Patient>(PatientQueue);
     private static List<Patient> PatientList = new List<Patient>();
+    private static List<Thread> PatientThreads = new List<Thread>();
 
 
     public static readonly int patientArrivalInterval = 2000;
@@ -51,7 +53,7 @@ public static class Hospital
 
             do{
                 Id = rnd.Next(1,101);
-                existentId = checkingExistentId(Id);
+                existentId = CheckingExistentId(Id);
             }
             while(existentId);
 
@@ -60,17 +62,23 @@ public static class Hospital
             Patient patient = new Patient(Id, arrivalOrderNum, consultationTime);
             PatientList.Add(patient);
 
-            if (patient.RequiresDiagnostic) DiagnosticQueue.Add(patient);
-
             Thread patientProccess = new Thread(() => action(patient));
+            PatientThreads.Add(patientProccess);
             patientProccess.Start();
 
             Thread.Sleep(patientArrivalInterval);
         }
+
+        foreach(Thread thread in PatientThreads)
+        {
+            thread.Join();
+        }
+
+        ConsoleView.ShowExitMessage();
     }
 
 
-    private static bool checkingExistentId(int Id)
+    private static bool CheckingExistentId(int Id)
     {
         foreach(Patient patient in PatientList)
         {

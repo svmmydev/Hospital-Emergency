@@ -26,6 +26,7 @@ internal class Program
 
         patient.Status = PatientStatus.InConsultation;
         ConsoleView.ShowHospitalStatusMessage(patient, Doctor: assignedDoctor);
+        if (patient.RequiresDiagnostic) Hospital.DiagnosticQueue.Add(patient);
         Thread.Sleep(patient.ConsultationTime * 1000);
 
         assignedDoctor.ReleaseDoctor();
@@ -36,19 +37,23 @@ internal class Program
 
         if (patient.RequiresDiagnostic)
         {
-            while (true)
+            CTScanner assignedCTScanner;
+
+            lock (Hospital.queueLock)
             {
-                if (Hospital.PatientQueue.TryPeek(out Patient? firstPatient) && firstPatient == patient)
+                while (!(Hospital.PatientQueue.TryPeek(out Patient? firstPatient) && firstPatient == patient))
                 {
-                    Hospital.DiagnosticQueue.Take();
-                    break;
+                    Monitor.Wait(Hospital.queueLock);
                 }
-                Thread.Sleep(100);
+
+                Hospital.DiagnosticQueue.Take();
+
+                Hospital.scannerSem.Wait();
+                assignedCTScanner = CTScanner.AssignCTScanner();
+
+                Monitor.PulseAll(Hospital.queueLock);
             }
-
-            Hospital.scannerSem.Wait();
-            CTScanner assignedCTScanner = CTScanner.AssignCTScanner();
-
+            
             patient.Status = PatientStatus.WaitingDiagnostic;
             ConsoleView.ShowHospitalStatusMessage(patient, CTScanner: assignedCTScanner);
             Thread.Sleep(Hospital.medicalTestTime);

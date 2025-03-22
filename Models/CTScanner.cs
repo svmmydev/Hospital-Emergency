@@ -41,7 +41,7 @@ public class CTScanner
         {
             lock (locker)
             {
-                var availableCTScanner = Hospital.CTScannerList.Where(d => d.IsAvailable).ToList(); 
+                var availableCTScanner = Hospital.CTScannerList.Where(d => d.IsAvailable).ToList();
 
                 if (availableCTScanner.Count > 0)
                 {

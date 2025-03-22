@@ -7,7 +7,7 @@ namespace HospitalUrgencias.Models;
 /// </summary>
 public enum PatientStatus
 {
-    Waiting,
+    WaitingConsultation,
     InConsultation,
     WaitingDiagnostic,
     Finished   
@@ -23,7 +23,7 @@ public class Patient
     public int Id {get; private set;}
     public int HospitalArrival {get; private set;}
     public int ConsultationTime {get; private set;}
-    public PatientStatus Status {get; set;} = PatientStatus.Waiting;
+    public PatientStatus Status {get; set;} = PatientStatus.WaitingConsultation;
     public int WaitingTime {get; private set;}
     public bool RequiresDiagnostic {get; set;}
 

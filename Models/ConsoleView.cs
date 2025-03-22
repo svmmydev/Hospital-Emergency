@@ -6,7 +6,7 @@ public static class ConsoleView
     public static void ShowWelcomeMessage()
     {
         Console.WriteLine("\n# PATIENTS ARE ENTERING THE HOSPITAL #");
-        Console.WriteLine("-----------------------------------------------------------------\n");
+        Console.WriteLine("-----------------------------------------------------------------");
 
     }
 
@@ -47,10 +47,10 @@ public static class ConsoleView
         }
 
         Console.WriteLine(
-            $"| Patient {patient.Id} " +
+            $"\n| Patient {patient.Id} " +
             $"| Arrived as {patient.HospitalArrival} " +
             $"| Status: {patient.Status} " +
-            $"{statusMsg} |\n"
+            $"{statusMsg} |"
         );
     }
 }

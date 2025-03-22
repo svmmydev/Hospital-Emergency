@@ -1,5 +1,6 @@
 ﻿
 using System.Collections.Concurrent;
+using System.Runtime.CompilerServices;
 
 namespace HospitalUrgencias.Models;
 
@@ -62,9 +63,9 @@ public static class Hospital
             Patient patient = new Patient(Id, arrivalOrderNum, consultationTime);
             PatientList.Add(patient);
 
-            Thread patientProccess = new Thread(() => action(patient));
-            PatientThreads.Add(patientProccess);
-            patientProccess.Start();
+            Thread patientThread = new Thread(() => action(patient));
+            PatientThreads.Add(patientThread);
+            patientThread.Start();
 
             Thread.Sleep(patientArrivalInterval);
         }

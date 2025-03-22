@@ -11,15 +11,11 @@ internal class Program
     /// </summary>
     private static void Main(string[] args)
     {
-        Hospital.HospitalProgram(PatientArrival);
+        Hospital.HospitalProgram(PatientProcess);
     }
 
 
-    /// <summary>
-    /// Simulates the arrival of a patient and assigns them to a doctor for a consultation.
-    /// </summary>
-    /// <param name="Patient">The patient with all of his properties.</param>
-    private static void PatientArrival(Patient patient)
+    private static void PatientProcess(Patient patient)
     {
         Hospital.consultSem.Wait();
         Doctor assignedDoctor = Doctor.AssignDoctor();

@@ -5,7 +5,17 @@ public static class ConsoleView
 {
     public static void ShowWelcomeMessage()
     {
-        Console.WriteLine("\nPatients are entering the hospital..\n");
+        Console.WriteLine("\n# PATIENTS ARE ENTERING THE HOSPITAL #");
+        Console.WriteLine("-----------------------------------------------------------------");
+
+    }
+
+
+    public static void ShowExitMessage()
+    {
+        Console.WriteLine("\n-----------------------------------------------------------------");
+        Console.WriteLine("# ALL PATIENTS HAVE BEEN TREATED #\n");
+        Console.WriteLine("\nClosing program..\n");
     }
 
 
@@ -37,7 +47,7 @@ public static class ConsoleView
         }
 
         Console.WriteLine(
-            $"| Patient {patient.Id} " +
+            $"\n| Patient {patient.Id} " +
             $"| Arrived as {patient.HospitalArrival} " +
             $"| Status: {patient.Status} " +
             $"{statusMsg} |"

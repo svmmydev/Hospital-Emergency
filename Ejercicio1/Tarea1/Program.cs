@@ -20,7 +20,7 @@ internal class Program
 
             int consultationTime = 10000;
 
-            Thread patient = new Thread(() => PatientArrival(arrivalOrderNum, consultationTime));
+            Thread patient = new Thread(() => PatientProcess(arrivalOrderNum, consultationTime));
             patient.Start();
 
             Thread.Sleep(Hospital.patientArrivalInterval);
@@ -33,7 +33,7 @@ internal class Program
     /// </summary>
     /// <param name="PatientId">The unique identifier of the arriving patient.</param>
     /// <param name="ConsultationTime">Duration of the consultation.</param>
-    private static void PatientArrival(int arrivalOrderNumber, int ConsultationTime)
+    private static void PatientProcess(int arrivalOrderNumber, int ConsultationTime)
     {
         Console.WriteLine($"Patient has arrived. Arrival order number: {arrivalOrderNumber}.");
 

@@ -14,10 +14,10 @@ internal class Program
         Hospital.HospitalProgram(PatientProcess);
     }
 
-
+    //TODO: MODULARIZAR METODO
     private static void PatientProcess(Patient patient)
     {
-        Hospital.consultSem.Wait();
+        Hospital.consultationSem.Wait();
         Doctor assignedDoctor = Doctor.AssignDoctor();
 
         patient.Status = PatientStatus.InConsultation;
@@ -26,7 +26,7 @@ internal class Program
         Thread.Sleep(patient.ConsultationTime * 1000);
 
         assignedDoctor.ReleaseDoctor();
-        Hospital.consultSem.Release();
+        Hospital.consultationSem.Release();
 
         patient.Status = PatientStatus.Finished;
         ConsoleView.ShowHospitalStatusMessage(patient, Doctor: assignedDoctor);

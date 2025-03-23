@@ -25,6 +25,9 @@ public static class ConsoleView
 
         switch (patient.Status)
         {
+            case PatientStatus.WaitingConsultation:
+                statusMsg = $"| Waiting for a consultation call";
+                break;
             case PatientStatus.InConsultation:
                 statusMsg = $"| Assigned: {Doctor?.ReferenceName} " +
                             $"| Waiting duration: {patient.WaitingTime}s";

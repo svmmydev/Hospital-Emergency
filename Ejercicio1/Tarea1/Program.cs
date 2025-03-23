@@ -37,14 +37,14 @@ internal class Program
     {
         Console.WriteLine($"Patient has arrived. Arrival order number: {arrivalOrderNumber}.");
 
-        Hospital.consultSem.Wait();
+        Hospital.consultationSem.Wait();
         Doctor assignedDoctor = Doctor.AssignDoctor();
 
         Thread.Sleep(ConsultationTime);
 
         Console.WriteLine($"Patient with arrival order number: {arrivalOrderNumber} has finished the consultation.");
         assignedDoctor.ReleaseDoctor();
-        Hospital.consultSem.Release();
+        Hospital.consultationSem.Release();
     }
 
 }

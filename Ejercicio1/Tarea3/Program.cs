@@ -21,7 +21,7 @@ internal class Program
     /// <param name="Patient">The patient with all of his properties.</param>
     private static void PatientProcess(Patient patient)
     {
-        Hospital.consultSem.Wait();
+        Hospital.consultationSem.Wait();
         Doctor assignedDoctor = Doctor.AssignDoctor();
 
         patient.Status = PatientStatus.InConsultation;
@@ -31,6 +31,6 @@ internal class Program
         patient.Status = PatientStatus.Finished;
         ConsoleView.ShowHospitalStatusMessage(patient, Doctor: assignedDoctor, showDiagnosticMessage: false);
         assignedDoctor.ReleaseDoctor();
-        Hospital.consultSem.Release();
+        Hospital.consultationSem.Release();
     }
 }

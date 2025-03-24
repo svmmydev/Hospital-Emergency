@@ -21,11 +21,12 @@ public class Patient
 {
     // Properties
     public int Id {get; private set;}
-    public int HospitalArrival {get; private set;}
-    public int ConsultationTime {get; private set;}
+    public int HospitalArrival {get; set;}
     public PatientStatus Status {get; set;} = PatientStatus.WaitingConsultation;
     public int WaitingTime {get; private set;}
+    public int ConsultationTime {get; private set;}
     public bool RequiresDiagnostic {get; set;}
+    public int DiagnosticOrderTicket {get; set;}
 
 
     // Common variables

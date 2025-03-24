@@ -25,11 +25,11 @@ internal class Program
         if (patient.RequiresDiagnostic) Hospital.DiagnosticQueue.Add(patient);
         Thread.Sleep(patient.ConsultationTime * 1000);
 
-        assignedDoctor.ReleaseDoctor();
-        Hospital.consultationSem.Release();
-
         patient.Status = PatientStatus.Finished;
         ConsoleView.ShowHospitalStatusMessage(patient, Doctor: assignedDoctor);
+
+        assignedDoctor.ReleaseDoctor();
+        Hospital.consultationSem.Release();
 
         if (patient.RequiresDiagnostic)
         {

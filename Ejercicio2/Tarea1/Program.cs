@@ -24,11 +24,11 @@ internal class Program
         ConsoleView.ShowHospitalStatusMessage(patient, Doctor: assignedDoctor);
         Thread.Sleep(patient.ConsultationTime * 1000);
 
-        assignedDoctor.ReleaseDoctor();
-        Hospital.consultationSem.Release();
-
         patient.Status = PatientStatus.Finished;
         ConsoleView.ShowHospitalStatusMessage(patient, Doctor: assignedDoctor);
+
+        assignedDoctor.ReleaseDoctor();
+        Hospital.consultationSem.Release();
 
         if (patient.RequiresDiagnostic)
         {

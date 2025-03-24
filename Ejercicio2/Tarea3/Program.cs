@@ -35,32 +35,10 @@ internal class Program
 
         if (patient.RequiresDiagnostic)
         {
-            CTScanner assignedCTScanner;
-
             lock (Hospital.queueLock)
             {
-                while (!(Hospital.PatientQueue.TryPeek(out Patient? firstPatient) && firstPatient == patient))
-                {
-                    Monitor.Wait(Hospital.queueLock);
-                }
-                
-                Hospital.DiagnosticQueue.Take();
-                
-                Hospital.scannerSem.Wait();
-                assignedCTScanner = CTScanner.AssignCTScanner();
-
                 Monitor.PulseAll(Hospital.queueLock);
             }
-            
-            patient.Status = PatientStatus.WaitingDiagnostic;
-            ConsoleView.ShowHospitalStatusMessage(patient, CTScanner: assignedCTScanner);
-            Thread.Sleep(Hospital.medicalTestTime);
-
-            patient.RequiresDiagnostic = false;
-            ConsoleView.ShowHospitalStatusMessage(patient, CTScanner: assignedCTScanner);
-            
-            assignedCTScanner.ReleaseCTScanner();
-            Hospital.scannerSem.Release();
         }
     }
 }

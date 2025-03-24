@@ -31,6 +31,7 @@ internal class Program
 
         patient.Status = PatientStatus.Finished;
         Console.WriteLine($"Patient with ID: {patient.Id} and arrival order number: {patient.HospitalArrival} has finished the consultation.");
+        
         assignedDoctor.ReleaseDoctor();
         Hospital.consultationSem.Release();
     }

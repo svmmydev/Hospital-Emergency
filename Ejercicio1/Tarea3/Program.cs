@@ -30,6 +30,7 @@ internal class Program
 
         patient.Status = PatientStatus.Finished;
         ConsoleView.ShowHospitalStatusMessage(patient, Doctor: assignedDoctor, showDiagnosticMessage: false);
+        
         assignedDoctor.ReleaseDoctor();
         Hospital.consultationSem.Release();
     }

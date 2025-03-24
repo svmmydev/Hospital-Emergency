@@ -43,6 +43,7 @@ internal class Program
         Thread.Sleep(ConsultationTime);
 
         Console.WriteLine($"Patient with arrival order number: {arrivalOrderNumber} has finished the consultation.");
+        
         assignedDoctor.ReleaseDoctor();
         Hospital.consultationSem.Release();
     }

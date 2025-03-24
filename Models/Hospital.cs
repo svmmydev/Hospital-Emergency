@@ -15,12 +15,14 @@ public static class Hospital
 
     public const int patientArrivalInterval = 2000;
     public const int medicalTestTime = 15000;
+    private static bool AllPatientsFinished = false;
 
 
     public static ConcurrentQueue<Patient> PatientQueue = new ConcurrentQueue<Patient>();
     public static BlockingCollection<Patient> DiagnosticQueue = new BlockingCollection<Patient>(PatientQueue);
     private static List<Patient> PatientList = new List<Patient>();
     private static List<Thread> PatientThreads = new List<Thread>();
+    private static List<Thread> DiagnosticThreads = new List<Thread>();
 
     
     // Doctor list
@@ -44,6 +46,13 @@ public static class Hospital
     public static void HospitalProgram(Action<Patient> action, int customTotalPatients = totalPatients)
     {
         ConsoleView.ShowWelcomeMessage();
+
+        for (int i = 0; i < CTScannerList.Count; i++)
+        {
+            Thread diagnosticThread = new Thread(DiagnosticProcess);
+            DiagnosticThreads.Add(diagnosticThread);
+            diagnosticThread.Start();
+        }
 
         // Simulates the arrival of patients at intervals.
         for (int i = 1; i <= customTotalPatients; i++)
@@ -74,7 +83,46 @@ public static class Hospital
             thread.Join();
         }
 
+        //TODO: AÑADIR CONSOLA TODAS LAS CONSULTAS HAN TERMINADO
+
+        DiagnosticQueue.CompleteAdding();
+
+        foreach(Thread thread in DiagnosticThreads)
+        {
+            thread.Join();
+        }
+
+        //TODO: AÑADIR CONSOLA TODOS LOS DIAGNOSTICOS HAN TERMINADO
+
         ConsoleView.ShowExitMessage();
+    }
+
+
+    private static void DiagnosticProcess()
+    {
+        foreach (var patient in DiagnosticQueue.GetConsumingEnumerable())
+        {
+            lock (queueLock)
+            {
+                while (patient.Status != PatientStatus.Finished)
+                {
+                    Monitor.Wait(queueLock);
+                }
+            }
+
+            CTScanner assignedCTScanner = CTScanner.AssignCTScanner();
+            scannerSem.Wait();
+
+            patient.Status = PatientStatus.WaitingDiagnostic;
+            ConsoleView.ShowHospitalStatusMessage(patient, CTScanner: assignedCTScanner);
+            Thread.Sleep(medicalTestTime);
+
+            patient.RequiresDiagnostic = false;
+            ConsoleView.ShowHospitalStatusMessage(patient, CTScanner: assignedCTScanner);
+
+            assignedCTScanner.ReleaseCTScanner();
+            scannerSem.Release();
+        }
     }
 
 

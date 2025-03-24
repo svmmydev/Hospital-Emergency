@@ -11,7 +11,7 @@ internal class Program
     /// </summary>
     private static void Main(string[] args)
     {
-        Hospital.HospitalProgram(PatientProcess);
+        Hospital.HospitalProgram(PatientProcess, 4);
     }
 
 

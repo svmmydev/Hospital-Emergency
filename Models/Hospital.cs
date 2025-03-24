@@ -6,7 +6,6 @@ namespace HospitalUrgencias.Models;
 //TODO: Ordenar todo el código según semántica
 public static class Hospital
 {
-    public const int totalPatients = 4;
     public static readonly SemaphoreSlim consultationSem = new SemaphoreSlim(4);
     public static readonly SemaphoreSlim scannerSem = new SemaphoreSlim(2);
     public static readonly Random rnd = new Random();
@@ -15,7 +14,6 @@ public static class Hospital
 
     public const int patientArrivalInterval = 2000;
     public const int medicalTestTime = 15000;
-    private static bool AllPatientsFinished = false;
 
 
     public static ConcurrentQueue<Patient> PatientQueue = new ConcurrentQueue<Patient>();
@@ -43,7 +41,7 @@ public static class Hospital
     };
 
 
-    public static void HospitalProgram(Action<Patient> action, int customTotalPatients = totalPatients)
+    public static void HospitalProgram(Action<Patient> action, int totalPatients)
     {
         ConsoleView.ShowWelcomeMessage();
 
@@ -55,7 +53,7 @@ public static class Hospital
         }
 
         // Simulates the arrival of patients at intervals.
-        for (int i = 1; i <= customTotalPatients; i++)
+        for (int i = 1; i <= totalPatients; i++)
         {
             int arrivalOrderNum = i;
             int Id;
@@ -83,8 +81,6 @@ public static class Hospital
             thread.Join();
         }
 
-        //TODO: AÑADIR CONSOLA TODAS LAS CONSULTAS HAN TERMINADO
-
         DiagnosticQueue.CompleteAdding();
 
         foreach(Thread thread in DiagnosticThreads)
@@ -92,9 +88,35 @@ public static class Hospital
             thread.Join();
         }
 
-        //TODO: AÑADIR CONSOLA TODOS LOS DIAGNOSTICOS HAN TERMINADO
-
         ConsoleView.ShowExitMessage();
+    }
+
+
+    public static void PatientProcess(Patient patient)
+    {
+        ConsoleView.ShowHospitalStatusMessage(patient);
+
+        consultationSem.Wait();
+        Doctor assignedDoctor = Doctor.AssignDoctor();
+
+        patient.Status = PatientStatus.InConsultation;
+        ConsoleView.ShowHospitalStatusMessage(patient, Doctor: assignedDoctor);
+        if (patient.RequiresDiagnostic) DiagnosticQueue.Add(patient);
+        Thread.Sleep(patient.ConsultationTime * 1000);
+        
+        patient.Status = PatientStatus.Finished;
+        ConsoleView.ShowHospitalStatusMessage(patient, Doctor: assignedDoctor);
+
+        assignedDoctor.ReleaseDoctor();
+        consultationSem.Release();
+
+        if (patient.RequiresDiagnostic)
+        {
+            lock (queueLock)
+            {
+                Monitor.PulseAll(queueLock);
+            }
+        }
     }
 
 
@@ -122,6 +144,11 @@ public static class Hospital
 
             assignedCTScanner.ReleaseCTScanner();
             scannerSem.Release();
+
+            lock (queueLock)
+            {
+                Monitor.PulseAll(queueLock);
+            }
         }
     }
 

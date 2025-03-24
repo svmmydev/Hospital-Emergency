@@ -11,12 +11,13 @@ internal class Program
     /// </summary>
     private static void Main(string[] args)
     {
-        Hospital.HospitalProgram(PatientProcess);
+        Hospital.HospitalProgram(PatientProcess, 4);
     }
 
-    //TODO: MODULARIZAR METODO
     private static void PatientProcess(Patient patient)
     {
+        ConsoleView.ShowHospitalStatusMessage(patient);
+        
         Hospital.consultationSem.Wait();
         Doctor assignedDoctor = Doctor.AssignDoctor();
 

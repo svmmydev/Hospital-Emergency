@@ -15,7 +15,7 @@ public static class RandomIdGenerator
             int id;
             do
             {
-                id = rnd.Next(1, maxId);
+                id = rnd.Next(1, maxId+1);
             }
             while (!usedIds.Add(id));
 

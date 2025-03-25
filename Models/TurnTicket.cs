@@ -1,14 +1,14 @@
 
 namespace HospitalUrgencias.Models;
 
-public static class TurnTicket
+public class TurnTicket
 {
-    private static int nextTicket = 1;
-    private static int currentTicket = 1;
-    private static readonly object ticketLock = new object();
+    private int nextTicket = 1;
+    private int currentTicket = 1;
+    private readonly object ticketLock = new object();
 
 
-    public static int GetTicket()
+    public int GetTicket()
     {
         lock (ticketLock)
         {
@@ -17,7 +17,7 @@ public static class TurnTicket
     }
 
 
-    public static void WaitTurn(int patientTicket)
+    public void WaitTurn(int patientTicket)
     {
         lock (ticketLock)
         {
@@ -29,7 +29,7 @@ public static class TurnTicket
     }
 
 
-    public static void Next()
+    public void Next()
     {
         lock (ticketLock)
         {

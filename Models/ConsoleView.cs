@@ -38,6 +38,7 @@ public static class ConsoleView
 
                 // Adds this message to the console if the program enables it through the parameter (showDiagnosticMessage: false?)
                 if (patient.RequiresDiagnostic && showDiagnosticMessage) statusMsg += $" | Waiting for a diagnostic CT Scanner test";
+                
                 break;
             case PatientStatus.WaitingDiagnostic:
                 if (patient.RequiresDiagnostic) statusMsg = $"| Entering {CTScanner?.ReferenceName}";

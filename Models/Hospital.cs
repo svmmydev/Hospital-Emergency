@@ -7,7 +7,9 @@ namespace HospitalUrgencias.Models;
 public static class Hospital
 {
     public static readonly SemaphoreSlim consultationSem = new SemaphoreSlim(4);
+    public static TurnTicket diagnosticTicketTurn = new TurnTicket();
     public static readonly SemaphoreSlim scannerSem = new SemaphoreSlim(2);
+    public static TurnTicket consultationTicketTurn = new TurnTicket();
     public static readonly Random rnd = new Random();
     public static readonly object queueLock = new object();
 
@@ -55,12 +57,13 @@ public static class Hospital
         // Simulates the arrival of patients at intervals.
         for (int i = 1; i <= totalPatients; i++)
         {
-            int arrivalOrderNum = TurnTicket.GetTicket();
-            int Id = RandomIdGenerator.GetUniqueId(totalPatients);
+            int arrivalOrderNum = i;
+            int Id = RandomIdGenerator.GetUniqueId(1000);
 
+            int consultationTicket = consultationTicketTurn.GetTicket();
             int consultationTime = rnd.Next(5,16);
 
-            Patient patient = new Patient(Id, arrivalOrderNum, consultationTime);
+            Patient patient = new Patient(Id, arrivalOrderNum, consultationTicket, consultationTime);
             PatientList.Add(patient);
 
             Thread patientThread = new Thread(() => action(patient));
@@ -90,12 +93,22 @@ public static class Hospital
     {
         ConsoleView.ShowHospitalStatusMessage(patient);
 
+        consultationTicketTurn.WaitTurn(patient.HospitalArrival);
+
         consultationSem.Wait();
         Doctor assignedDoctor = Doctor.AssignDoctor();
 
         patient.Status = PatientStatus.InConsultation;
         ConsoleView.ShowHospitalStatusMessage(patient, Doctor: assignedDoctor);
-        if (patient.RequiresDiagnostic) DiagnosticQueue.Add(patient);
+
+        consultationTicketTurn.Next();
+
+        if (patient.RequiresDiagnostic)
+        {
+            patient.DiagnosticTicket = diagnosticTicketTurn.GetTicket();
+            DiagnosticQueue.Add(patient);
+        }
+
         Thread.Sleep(patient.ConsultationTime * 1000);
         
         patient.Status = PatientStatus.Finished;
@@ -118,7 +131,7 @@ public static class Hospital
     {
         foreach (var patient in DiagnosticQueue.GetConsumingEnumerable())
         {
-            TurnTicket.WaitTurn(patient.HospitalArrival);
+            diagnosticTicketTurn.WaitTurn(patient.DiagnosticTicket);
 
             lock (queueLock)
             {
@@ -134,7 +147,7 @@ public static class Hospital
             patient.Status = PatientStatus.WaitingDiagnostic;
             ConsoleView.ShowHospitalStatusMessage(patient, CTScanner: assignedCTScanner);
 
-            TurnTicket.Next();
+            diagnosticTicketTurn.Next();
 
             Thread.Sleep(medicalTestTime);
 
@@ -149,5 +162,16 @@ public static class Hospital
                 Monitor.PulseAll(queueLock);
             }
         }
+    }
+
+
+    private static bool CheckingExistentId(int Id)
+    {
+        foreach(Patient patient in PatientList)
+        {
+            if(patient.Id == Id) return true;
+        }
+
+        return false;
     }
 }

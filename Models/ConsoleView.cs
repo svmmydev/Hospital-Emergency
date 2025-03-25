@@ -25,6 +25,9 @@ public static class ConsoleView
 
         switch (patient.Status)
         {
+            case PatientStatus.WaitingConsultation:
+                statusMsg = $"| Waiting for a consultation call";
+                break;
             case PatientStatus.InConsultation:
                 statusMsg = $"| Assigned: {Doctor?.ReferenceName} " +
                             $"| Waiting duration: {patient.WaitingTime}s";
@@ -35,6 +38,7 @@ public static class ConsoleView
 
                 // Adds this message to the console if the program enables it through the parameter (showDiagnosticMessage: false?)
                 if (patient.RequiresDiagnostic && showDiagnosticMessage) statusMsg += $" | Waiting for a diagnostic CT Scanner test";
+                
                 break;
             case PatientStatus.WaitingDiagnostic:
                 if (patient.RequiresDiagnostic) statusMsg = $"| Entering {CTScanner?.ReferenceName}";

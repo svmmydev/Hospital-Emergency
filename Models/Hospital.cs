@@ -1,26 +1,28 @@
 ﻿
 using System.Collections.Concurrent;
-using System.Runtime.CompilerServices;
 
 namespace HospitalUrgencias.Models;
 
+//TODO: Ordenar todo el código según semántica
 public static class Hospital
 {
-    public static readonly int totalPatients = 4;
-    public static readonly SemaphoreSlim consultSem = new SemaphoreSlim(4);
+    public static readonly SemaphoreSlim consultationSem = new SemaphoreSlim(4);
+    public static TurnTicket diagnosticTicketTurn = new TurnTicket();
     public static readonly SemaphoreSlim scannerSem = new SemaphoreSlim(2);
+    public static TurnTicket consultationTicketTurn = new TurnTicket();
     public static readonly Random rnd = new Random();
     public static readonly object queueLock = new object();
+
+
+    public const int patientArrivalInterval = 2000;
+    public const int medicalTestTime = 15000;
 
 
     public static ConcurrentQueue<Patient> PatientQueue = new ConcurrentQueue<Patient>();
     public static BlockingCollection<Patient> DiagnosticQueue = new BlockingCollection<Patient>(PatientQueue);
     private static List<Patient> PatientList = new List<Patient>();
     private static List<Thread> PatientThreads = new List<Thread>();
-
-
-    public static readonly int patientArrivalInterval = 2000;
-    public static readonly int medicalTestTime = 15000;
+    private static List<Thread> DiagnosticThreads = new List<Thread>();
 
     
     // Doctor list
@@ -41,26 +43,27 @@ public static class Hospital
     };
 
 
-    public static void HospitalProgram(Action<Patient> action)
+    public static void HospitalProgram(Action<Patient> action, int totalPatients)
     {
         ConsoleView.ShowWelcomeMessage();
+
+        for (int i = 0; i < CTScannerList.Count; i++)
+        {
+            Thread diagnosticThread = new Thread(DiagnosticProcess);
+            DiagnosticThreads.Add(diagnosticThread);
+            diagnosticThread.Start();
+        }
 
         // Simulates the arrival of patients at intervals.
         for (int i = 1; i <= totalPatients; i++)
         {
             int arrivalOrderNum = i;
-            int Id;
-            bool existentId;
+            int Id = RandomIdGenerator.GetUniqueId(1000);
 
-            do{
-                Id = rnd.Next(1,101);
-                existentId = CheckingExistentId(Id);
-            }
-            while(existentId);
-
+            int consultationTicket = consultationTicketTurn.GetTicket();
             int consultationTime = rnd.Next(5,16);
 
-            Patient patient = new Patient(Id, arrivalOrderNum, consultationTime);
+            Patient patient = new Patient(Id, arrivalOrderNum, consultationTicket, consultationTime);
             PatientList.Add(patient);
 
             Thread patientThread = new Thread(() => action(patient));
@@ -75,7 +78,90 @@ public static class Hospital
             thread.Join();
         }
 
+        DiagnosticQueue.CompleteAdding();
+
+        foreach(Thread thread in DiagnosticThreads)
+        {
+            thread.Join();
+        }
+
         ConsoleView.ShowExitMessage();
+    }
+
+
+    public static void PatientProcess(Patient patient)
+    {
+        ConsoleView.ShowHospitalStatusMessage(patient);
+
+        consultationTicketTurn.WaitTurn(patient.HospitalArrival);
+
+        consultationSem.Wait();
+        Doctor assignedDoctor = Doctor.AssignDoctor();
+
+        patient.Status = PatientStatus.InConsultation;
+        ConsoleView.ShowHospitalStatusMessage(patient, Doctor: assignedDoctor);
+
+        consultationTicketTurn.Next();
+
+        if (patient.RequiresDiagnostic)
+        {
+            patient.DiagnosticTicket = diagnosticTicketTurn.GetTicket();
+            DiagnosticQueue.Add(patient);
+        }
+
+        Thread.Sleep(patient.ConsultationTime * 1000);
+        
+        patient.Status = PatientStatus.Finished;
+        ConsoleView.ShowHospitalStatusMessage(patient, Doctor: assignedDoctor);
+
+        assignedDoctor.ReleaseDoctor();
+        consultationSem.Release();
+
+        if (patient.RequiresDiagnostic)
+        {
+            lock (queueLock)
+            {
+                Monitor.PulseAll(queueLock);
+            }
+        }
+    }
+
+
+    private static void DiagnosticProcess()
+    {
+        foreach (var patient in DiagnosticQueue.GetConsumingEnumerable())
+        {
+            diagnosticTicketTurn.WaitTurn(patient.DiagnosticTicket);
+
+            lock (queueLock)
+            {
+                while (patient.Status != PatientStatus.Finished)
+                {
+                    Monitor.Wait(queueLock);
+                }
+            }
+
+            CTScanner assignedCTScanner = CTScanner.AssignCTScanner();
+            scannerSem.Wait();
+
+            patient.Status = PatientStatus.WaitingDiagnostic;
+            ConsoleView.ShowHospitalStatusMessage(patient, CTScanner: assignedCTScanner);
+
+            diagnosticTicketTurn.Next();
+
+            Thread.Sleep(medicalTestTime);
+
+            patient.RequiresDiagnostic = false;
+            ConsoleView.ShowHospitalStatusMessage(patient, CTScanner: assignedCTScanner);
+
+            assignedCTScanner.ReleaseCTScanner();
+            scannerSem.Release();
+
+            lock (queueLock)
+            {
+                Monitor.PulseAll(queueLock);
+            }
+        }
     }
 
 

@@ -22,10 +22,12 @@ public class Patient
     // Properties
     public int Id {get; private set;}
     public int HospitalArrival {get; private set;}
-    public int ConsultationTime {get; private set;}
     public PatientStatus Status {get; set;} = PatientStatus.WaitingConsultation;
     public int WaitingTime {get; private set;}
+    public int ConsultationTime {get; private set;}
     public bool RequiresDiagnostic {get; set;}
+    public int DiagnosticTicket {get; set;}
+    public int ConsultationTicket {get; set;}
 
 
     // Common variables
@@ -40,13 +42,12 @@ public class Patient
     /// <param name="HospitalArrival">The patient's waiting time.</param>
     /// <param name="ConsultationTime">The consultation time the patient needs.</param>
     /// <param name="startTimer">The patient's waiting timer.</param>
-    public Patient (int Id, int HospitalArrival, int ConsultationTime, bool startTimer = false)
+    public Patient (int Id, int HospitalArrival, int ConsultationTicket, int ConsultationTime, bool startTimer = false)
     {
         this.Id = Id;
         this.HospitalArrival = HospitalArrival;
         this.ConsultationTime = ConsultationTime;
-        // RequiresDiagnostic = Hospital.rnd.Next(0,2) == 1;
-        RequiresDiagnostic = true;
+        RequiresDiagnostic = Hospital.rnd.Next(0,2) == 1;
 
         if (startTimer)
         {

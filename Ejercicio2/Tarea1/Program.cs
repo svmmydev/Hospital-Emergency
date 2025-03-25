@@ -11,24 +11,25 @@ internal class Program
     /// </summary>
     private static void Main(string[] args)
     {
-        Hospital.HospitalProgram(PatientProcess);
+        Hospital.HospitalProgram(PatientProcess, 4);
     }
-
 
     private static void PatientProcess(Patient patient)
     {
-        Hospital.consultSem.Wait();
+        ConsoleView.ShowHospitalStatusMessage(patient);
+        
+        Hospital.consultationSem.Wait();
         Doctor assignedDoctor = Doctor.AssignDoctor();
 
         patient.Status = PatientStatus.InConsultation;
         ConsoleView.ShowHospitalStatusMessage(patient, Doctor: assignedDoctor);
         Thread.Sleep(patient.ConsultationTime * 1000);
 
-        assignedDoctor.ReleaseDoctor();
-        Hospital.consultSem.Release();
-
         patient.Status = PatientStatus.Finished;
         ConsoleView.ShowHospitalStatusMessage(patient, Doctor: assignedDoctor);
+
+        assignedDoctor.ReleaseDoctor();
+        Hospital.consultationSem.Release();
 
         if (patient.RequiresDiagnostic)
         {

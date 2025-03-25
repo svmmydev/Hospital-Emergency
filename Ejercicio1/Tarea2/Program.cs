@@ -11,7 +11,7 @@ internal class Program
     /// </summary>
     private static void Main(string[] args)
     {
-        Hospital.HospitalProgram(PatientProcess);
+        Hospital.HospitalProgram(PatientProcess, 4);
     }
 
 
@@ -21,17 +21,18 @@ internal class Program
     /// <param name="Patient">The patient with all of his properties.</param>
     private static void PatientProcess(Patient patient)
     {
-        Console.WriteLine($"Patient has arrived. ID: {patient.Id} and arrival order number: {patient.HospitalArrival}.");
+        Console.WriteLine($"\nPatient has arrived. ID: {patient.Id} and arrival order number: {patient.HospitalArrival}.");
 
-        Hospital.consultSem.Wait();
+        Hospital.consultationSem.Wait();
         Doctor assignedDoctor = Doctor.AssignDoctor();
 
         patient.Status = PatientStatus.InConsultation;
         Thread.Sleep(patient.ConsultationTime * 1000);
 
         patient.Status = PatientStatus.Finished;
-        Console.WriteLine($"Patient with ID: {patient.Id} and arrival order number: {patient.HospitalArrival} has finished the consultation.");
+        Console.WriteLine($"\nPatient with ID: {patient.Id} and arrival order number: {patient.HospitalArrival} has finished the consultation.");
+        
         assignedDoctor.ReleaseDoctor();
-        Hospital.consultSem.Release();
+        Hospital.consultationSem.Release();
     }
 }

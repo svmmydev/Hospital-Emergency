@@ -14,7 +14,7 @@ internal class Program
         ConsoleView.ShowWelcomeMessage();
 
         // Simulates the arrival of patients at intervals.
-        for (int i = 1; i <= Hospital.totalPatients; i++)
+        for (int i = 1; i <= 4; i++)
         {
             int arrivalOrderNum = i;
 
@@ -25,6 +25,8 @@ internal class Program
 
             Thread.Sleep(Hospital.patientArrivalInterval);
         }
+
+        ConsoleView.ShowExitMessage();
     }
 
 
@@ -35,16 +37,17 @@ internal class Program
     /// <param name="ConsultationTime">Duration of the consultation.</param>
     private static void PatientProcess(int arrivalOrderNumber, int ConsultationTime)
     {
-        Console.WriteLine($"Patient has arrived. Arrival order number: {arrivalOrderNumber}.");
+        Console.WriteLine($"\nPatient has arrived. Arrival order number: {arrivalOrderNumber}.");
 
-        Hospital.consultSem.Wait();
+        Hospital.consultationSem.Wait();
         Doctor assignedDoctor = Doctor.AssignDoctor();
 
         Thread.Sleep(ConsultationTime);
 
-        Console.WriteLine($"Patient with arrival order number: {arrivalOrderNumber} has finished the consultation.");
+        Console.WriteLine($"\nPatient with arrival order number: {arrivalOrderNumber} has finished the consultation.");
+        
         assignedDoctor.ReleaseDoctor();
-        Hospital.consultSem.Release();
+        Hospital.consultationSem.Release();
     }
 
 }

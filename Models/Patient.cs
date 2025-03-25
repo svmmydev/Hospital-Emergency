@@ -26,7 +26,6 @@ public class Patient
     public int WaitingTime {get; private set;}
     public int ConsultationTime {get; private set;}
     public bool RequiresDiagnostic {get; set;}
-    public int DiagnosticOrderTicket {get; set;}
 
 
     // Common variables
@@ -46,7 +45,8 @@ public class Patient
         this.Id = Id;
         this.HospitalArrival = HospitalArrival;
         this.ConsultationTime = ConsultationTime;
-        RequiresDiagnostic = Hospital.rnd.Next(0,2) == 1;
+        // RequiresDiagnostic = Hospital.rnd.Next(0,2) == 1;
+        RequiresDiagnostic = true;
 
         if (startTimer)
         {

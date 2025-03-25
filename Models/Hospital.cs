@@ -55,14 +55,8 @@ public static class Hospital
         // Simulates the arrival of patients at intervals.
         for (int i = 1; i <= totalPatients; i++)
         {
-            int arrivalOrderNum = i;
-            int Id;
-            bool existentId;
-
-            do{
-                Id = rnd.Next(1,101);
-                existentId = CheckingExistentId(Id);
-            } while(existentId);
+            int arrivalOrderNum = TurnTicket.GetTicket();
+            int Id = RandomIdGenerator.GetUniqueId(totalPatients);
 
             int consultationTime = rnd.Next(5,16);
 
@@ -124,6 +118,8 @@ public static class Hospital
     {
         foreach (var patient in DiagnosticQueue.GetConsumingEnumerable())
         {
+            TurnTicket.WaitTurn(patient.HospitalArrival);
+
             lock (queueLock)
             {
                 while (patient.Status != PatientStatus.Finished)
@@ -137,6 +133,9 @@ public static class Hospital
 
             patient.Status = PatientStatus.WaitingDiagnostic;
             ConsoleView.ShowHospitalStatusMessage(patient, CTScanner: assignedCTScanner);
+
+            TurnTicket.Next();
+
             Thread.Sleep(medicalTestTime);
 
             patient.RequiresDiagnostic = false;
@@ -150,16 +149,5 @@ public static class Hospital
                 Monitor.PulseAll(queueLock);
             }
         }
-    }
-
-
-    private static bool CheckingExistentId(int Id)
-    {
-        foreach(Patient patient in PatientList)
-        {
-            if(patient.Id == Id) return true;
-        }
-
-        return false;
     }
 }

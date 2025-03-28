@@ -1,5 +1,6 @@
 
-namespace HospitalUrgencias.Models;
+namespace HospitalUrgencias.Hospital.Helpers;
+using HospitalUrgencias.Hospital.Models;
 
 public static class ConsoleView
 {
@@ -19,9 +20,10 @@ public static class ConsoleView
     }
 
 
-    public static void ShowHospitalStatusMessage(Patient patient, Doctor? Doctor = null, CTScanner? CTScanner = null, bool showDiagnosticMessage = true)
+    public static void ShowHospitalStatusMessage(Patient patient, Doctor? Doctor = null, CTScanner? CTScanner = null, bool showPriorityMessage = false)
     {
         string statusMsg;
+        string priorityMsg = "";
 
         switch (patient.Status)
         {
@@ -36,8 +38,7 @@ public static class ConsoleView
                 statusMsg = $"| Consultation duration: {patient.ConsultationTime}s " +
                             $"({Doctor?.ReferenceName} is now free)";
 
-                // Adds this message to the console if the program enables it through the parameter (showDiagnosticMessage: false?)
-                if (patient.RequiresDiagnostic && showDiagnosticMessage) statusMsg += $" | Waiting for a diagnostic CT Scanner test";
+                if (patient.RequiresDiagnostic) statusMsg += $" | Waiting for a diagnostic CT Scanner test";
                 
                 break;
             case PatientStatus.WaitingDiagnostic:
@@ -50,9 +51,12 @@ public static class ConsoleView
                 break;
         }
 
+        if (showPriorityMessage) priorityMsg = $"| Priority: {patient.Priority} ";
+
         Console.WriteLine(
             $"\n| Patient {patient.Id} " +
             $"| Arrived as {patient.HospitalArrival} " +
+            $"{priorityMsg}" +
             $"| Status: {patient.Status} " +
             $"{statusMsg} |"
         );

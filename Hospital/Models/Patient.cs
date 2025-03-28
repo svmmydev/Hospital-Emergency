@@ -1,5 +1,18 @@
 ﻿
-namespace HospitalUrgencias.Models;
+namespace HospitalUrgencias.Hospital.Models;
+using HospitalUrgencias.Hospital.Helpers;
+using HospitalUrgencias.Hospital.Services;
+
+
+/// <summary>
+/// Enum representing the patient's priority in the hospital.
+/// </summary>
+public enum PatientPriority
+{
+    Emergency = 1,
+    Urgency = 2,
+    GeneralConsultation = 3
+}
 
 
 /// <summary>
@@ -22,12 +35,13 @@ public class Patient
     // Properties
     public int Id {get; private set;}
     public int HospitalArrival {get; private set;}
-    public PatientStatus Status {get; set;} = PatientStatus.WaitingConsultation;
+    public PatientStatus Status {get; set;}
     public int WaitingTime {get; private set;}
     public int ConsultationTime {get; private set;}
     public bool RequiresDiagnostic {get; set;}
     public int DiagnosticTicket {get; set;}
-    public int ConsultationTicket {get; set;}
+    public int ConsultationTicket {get; private set;}
+    public PatientPriority Priority {get; private set;}
 
 
     // Common variables
@@ -38,16 +52,17 @@ public class Patient
     /// <summary>
     /// Initializes a new instance of the patient class.
     /// </summary>
-    /// <param name="Id">The unique identification number of the doctor.</param>
     /// <param name="HospitalArrival">The patient's waiting time.</param>
-    /// <param name="ConsultationTime">The consultation time the patient needs.</param>
     /// <param name="startTimer">The patient's waiting timer.</param>
-    public Patient (int Id, int HospitalArrival, int ConsultationTicket, int ConsultationTime, bool startTimer = false)
+    public Patient (int HospitalArrival, bool startTimer = false)
     {
-        this.Id = Id;
+        Id = RandomIdGenerator.GetUniqueId(1000);
+        ConsultationTicket = TicketProgram.consultationTicketTurn.GetTicket(); // Optional (Ej2 Tarea3)
         this.HospitalArrival = HospitalArrival;
-        this.ConsultationTime = ConsultationTime;
+        Status = PatientStatus.WaitingConsultation;
+        ConsultationTime = Hospital.rnd.Next(5,16);
         RequiresDiagnostic = Hospital.rnd.Next(0,2) == 1;
+        Priority = (PatientPriority)Hospital.rnd.Next(1,4);
 
         if (startTimer)
         {

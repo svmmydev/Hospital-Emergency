@@ -1,5 +1,6 @@
 
-namespace HospitalUrgencias.Models;
+namespace HospitalUrgencias.Hospital.Models;
+using HospitalUrgencias.Hospital.Services;
 
 /// <summary>
 /// Represents a CT Scanner in the hospital.
@@ -37,9 +38,9 @@ public class CTScanner
     {
         CTScanner selectedCTScanner;
 
-        while (true)
+        lock (locker)
         {
-            lock (locker)
+            while (true)
             {
                 var availableCTScanner = Hospital.CTScannerList.Where(d => d.IsAvailable).ToList();
 
@@ -49,6 +50,8 @@ public class CTScanner
                     selectedCTScanner.IsAvailable = false;
                     return selectedCTScanner;
                 }
+
+                Monitor.Wait(locker);
             }
         }
     }
@@ -62,6 +65,7 @@ public class CTScanner
         lock (locker)
         {
             IsAvailable = true;
+            Monitor.PulseAll(locker);
         }
     }
 }

@@ -1,11 +1,11 @@
 
-namespace HospitalUrgencias.Models;
+namespace HospitalUrgencias.Hospital.Helpers;
 
 public static class RandomIdGenerator
 {
-    private static readonly HashSet<int> usedIds = new();
-    private static readonly Random rnd = new();
-    private static readonly object lockObj = new();
+    private static readonly HashSet<int> usedIds = new HashSet<int>();
+    private static readonly Random rnd = new Random();
+    private static readonly object lockObj = new object();
 
 
     public static int GetUniqueId(int maxId)

@@ -1,5 +1,6 @@
 ﻿
-namespace HospitalUrgencias.Models;
+namespace HospitalUrgencias.Hospital.Models;
+using HospitalUrgencias.Hospital.Services;
 
 /// <summary>
 /// Represents a doctor in the hospital.
@@ -37,9 +38,9 @@ public class Doctor
     {
         Doctor selectedDoctor;
 
-        while (true)
+        lock (locker)
         {
-            lock (locker)
+            while (true)
             {
                 var availableDoctors = Hospital.DoctorList.Where(d => d.IsAvailable).ToList(); 
 
@@ -49,6 +50,8 @@ public class Doctor
                     selectedDoctor.IsAvailable = false;
                     return selectedDoctor;
                 }
+
+                Monitor.Wait(locker);
             }
         }
     }
@@ -62,6 +65,7 @@ public class Doctor
         lock (locker)
         {
             IsAvailable = true;
+            Monitor.PulseAll(locker);
         }
     }
 }

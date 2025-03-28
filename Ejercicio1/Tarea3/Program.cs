@@ -1,5 +1,8 @@
 ﻿
-using HospitalUrgencias.Models;
+using HospitalUrgencias.Hospital.Models;
+using HospitalUrgencias.Hospital.Services;
+using HospitalUrgencias.Hospital.Helpers;
+
 
 /// <summary>
 /// Simulates a concurrent medical consultation system.
@@ -11,7 +14,7 @@ internal class Program
     /// </summary>
     private static void Main(string[] args)
     {
-        Hospital.HospitalProgram(PatientProcess, 4);
+        TicketProgram.HospitalTicketProgram(PatientProcess, 4);
     }
 
 
@@ -29,7 +32,7 @@ internal class Program
         Thread.Sleep(patient.ConsultationTime * 1000);
 
         patient.Status = PatientStatus.Finished;
-        ConsoleView.ShowHospitalStatusMessage(patient, Doctor: assignedDoctor, showDiagnosticMessage: false);
+        ConsoleView.ShowHospitalStatusMessage(patient, Doctor: assignedDoctor);
         
         assignedDoctor.ReleaseDoctor();
         Hospital.consultationSem.Release();

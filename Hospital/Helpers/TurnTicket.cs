@@ -1,5 +1,5 @@
 
-namespace HospitalUrgencias.Models;
+namespace HospitalUrgencias.Hospital.Helpers;
 
 public class TurnTicket
 {

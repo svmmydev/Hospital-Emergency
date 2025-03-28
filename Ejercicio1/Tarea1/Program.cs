@@ -1,5 +1,8 @@
 ﻿
-using HospitalUrgencias.Models;
+using HospitalUrgencias.Hospital.Models;
+using HospitalUrgencias.Hospital.Services;
+using HospitalUrgencias.Hospital.Helpers;
+
 
 /// <summary>
 /// Simulates a concurrent medical consultation system.
@@ -21,10 +24,13 @@ internal class Program
             int consultationTime = 10000;
 
             Thread patient = new Thread(() => PatientProcess(arrivalOrderNum, consultationTime));
+            Hospital.PatientThreads.Add(patient);
             patient.Start();
 
             Thread.Sleep(Hospital.patientArrivalInterval);
         }
+
+        foreach (Thread thread in Hospital.PatientThreads) thread.Join();
 
         ConsoleView.ShowExitMessage();
     }

@@ -1,5 +1,6 @@
 ﻿
-using HospitalUrgencias.Models;
+using HospitalUrgencias.Hospital.Services;
+
 
 /// <summary>
 /// Simulates a concurrent medical consultation system.
@@ -11,6 +12,6 @@ internal class Program
     /// </summary>
     private static void Main(string[] args)
     {
-        Hospital.HospitalProgram(Hospital.PatientProcess, 20);
+        TicketProgram.HospitalTicketProgram(TicketProgram.PatientProcess, 20);
     }
 }

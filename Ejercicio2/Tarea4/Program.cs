@@ -1,7 +1,11 @@
-﻿internal class Program
+﻿
+using HospitalUrgencias.Hospital.Services;
+
+
+internal class Program
 {
     private static void Main(string[] args)
     {
-        Console.WriteLine("Hello, World!");
+        PriorityProgram.HospitalPriorityProgram(20);
     }
 }

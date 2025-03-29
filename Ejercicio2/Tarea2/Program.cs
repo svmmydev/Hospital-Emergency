@@ -12,6 +12,6 @@ internal class Program
     /// </summary>
     private static void Main(string[] args)
     {
-        TicketProgram.HospitalTicketProgram(TicketProgram.PatientProcess, 4);
+        TicketProgram.HospitalTicketProgram(TicketProgram.PatientProcess, 100);
     }
 }

@@ -1,6 +1,7 @@
 
 namespace HospitalUrgencias.Hospital.Helpers;
 using HospitalUrgencias.Hospital.Models;
+using HospitalUrgencias.Hospital.Services;
 
 public static class ConsoleView
 {

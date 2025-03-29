@@ -46,6 +46,7 @@ public static class Hospital
 
             scannerSem.Wait();
             patient.PauseWaitingTimer();
+            
             CTScanner assignedCTScanner = CTScanner.AssignCTScanner();
 
             patient.Status = PatientStatus.WaitingDiagnostic;
@@ -75,7 +76,7 @@ public static class Hospital
 
     public static void CreateDoctors()
     {
-        for (int i = 0; i < numberOfDoctors; i++)
+        for (int i = 1; i <= numberOfDoctors; i++)
         {
             Doctor doctor = new Doctor(i);
             DoctorList.Add(doctor);
@@ -84,7 +85,7 @@ public static class Hospital
     
     public static void CreateCTScanners()
     {
-        for (int i = 0; i < numberOfCTScanners; i++)
+        for (int i = 1; i <= numberOfCTScanners; i++)
         {
             CTScanner scanner = new CTScanner(i);
             CTScannerList.Add(scanner);

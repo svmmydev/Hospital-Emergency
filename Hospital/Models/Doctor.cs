@@ -15,6 +15,7 @@ public class Doctor
 
     // Common variables
     static readonly object locker = new object();
+    private static Random rnd = new Random();
 
 
     /// <summary>
@@ -46,7 +47,7 @@ public class Doctor
 
                 if (availableDoctors.Count > 0)
                 {
-                    selectedDoctor = availableDoctors[Hospital.rnd.Next(availableDoctors.Count)];
+                    selectedDoctor = availableDoctors[rnd.Next(availableDoctors.Count)];
                     selectedDoctor.IsAvailable = false;
                     return selectedDoctor;
                 }

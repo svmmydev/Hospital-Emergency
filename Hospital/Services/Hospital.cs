@@ -15,31 +15,19 @@ public static class Hospital
 
     public const int patientArrivalInterval = 2000;
     public const int medicalTestTime = 15000;
+    private const int numberOfDoctors = 4;
+    private const int numberOfCTScanners = 2;
 
 
     public static readonly ConcurrentQueue<Patient> PatientQueue = new ConcurrentQueue<Patient>();
     public static readonly BlockingCollection<Patient> DiagnosticQueue = new BlockingCollection<Patient>(PatientQueue);
-    public static readonly List<Patient> PatientList = [];
     public static readonly List<Thread> PatientThreads = new List<Thread>();
     public static readonly List<Thread> DiagnosticThreads = [];
 
     
-    // Doctor list
-    public static readonly List<Doctor> DoctorList = new List<Doctor>
-    {
-        new Doctor(1),
-        new Doctor(2),
-        new Doctor(3),
-        new Doctor(4)
-    };
-
-
-    // CTScanner list
-    public static readonly List<CTScanner> CTScannerList = new List<CTScanner>
-    {
-        new CTScanner(1),
-        new CTScanner(2)
-    };
+    // Doctor and CTScanner lists
+    public static readonly List<Doctor> DoctorList = new List<Doctor>();
+    public static readonly List<CTScanner> CTScannerList = new List<CTScanner>();
 
 
     public static void DiagnosticProcess()
@@ -57,6 +45,7 @@ public static class Hospital
             }
 
             scannerSem.Wait();
+            patient.PauseWaitingTimer();
             CTScanner assignedCTScanner = CTScanner.AssignCTScanner();
 
             patient.Status = PatientStatus.WaitingDiagnostic;
@@ -64,18 +53,41 @@ public static class Hospital
 
             diagnosticTicketTurn.Next();
 
+            DateTime startUsage = DateTime.Now;
             Thread.Sleep(medicalTestTime);
+            double scannerUsageTime = (DateTime.Now - startUsage).TotalSeconds;
+            Statistics.DiagnosticUsage(scannerUsageTime);
 
             patient.RequiresDiagnostic = false;
             ConsoleView.ShowHospitalStatusMessage(patient, CTScanner: assignedCTScanner);
 
             assignedCTScanner.ReleaseCTScanner();
             scannerSem.Release();
+            patient.StopWaitingTimer();
 
             lock (queueLock)
             {
                 Monitor.PulseAll(queueLock);
             }
+        }
+    }
+
+
+    public static void CreateDoctors()
+    {
+        for (int i = 0; i < numberOfDoctors; i++)
+        {
+            Doctor doctor = new Doctor(i);
+            DoctorList.Add(doctor);
+        }
+    }
+    
+    public static void CreateCTScanners()
+    {
+        for (int i = 0; i < numberOfCTScanners; i++)
+        {
+            CTScanner scanner = new CTScanner(i);
+            CTScannerList.Add(scanner);
         }
     }
 }

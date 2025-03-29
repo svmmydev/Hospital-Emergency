@@ -12,6 +12,9 @@ public class TicketProgram
     {
         ConsoleView.ShowWelcomeMessage();
 
+        Hospital.CreateDoctors();
+        Hospital.CreateCTScanners();
+
         for (int i = 0; i < Hospital.CTScannerList.Count; i++)
         {
             Thread diagnosticThread = new Thread(Hospital.DiagnosticProcess);
@@ -24,7 +27,6 @@ public class TicketProgram
             int arrivalOrderNum = i;
 
             Patient patient = new Patient(arrivalOrderNum);
-            Hospital.PatientList.Add(patient);
 
             Thread patientThread = new Thread(() => action(patient));
             Hospital.PatientThreads.Add(patientThread);

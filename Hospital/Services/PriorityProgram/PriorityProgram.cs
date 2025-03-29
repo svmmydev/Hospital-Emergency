@@ -9,14 +9,23 @@ public class PriorityProgram
         new PriorityQueue<Patient, (int Priority, int HospitalArrival)>();
     private static readonly object consultationLock = new object();
     private static readonly List<Thread> DoctorThreads = new List<Thread>();
-    private static int processedPatients = 0;
-    private static int TotalPatients;
+    public static int processedPatients = 0;
+    public static int TotalPatients;
+    
 
 
     public static void HospitalPriorityProgram(int totalPatients)
     {
         TotalPatients = totalPatients;
+        DateTime startSession = DateTime.Now;
+
+        Hospital.CreateDoctors();
+        Hospital.CreateCTScanners();
+        
         ConsoleView.ShowWelcomeMessage();
+
+        Thread StatManagerThread = new Thread(Statistics.StatsProcess);
+        StatManagerThread.Start();
 
         for (int i = 0; i < Hospital.CTScannerList.Count; i++)
         {
@@ -27,9 +36,9 @@ public class PriorityProgram
 
         for (int i = 0; i < Hospital.DoctorList.Count; i++)
         {
-            Thread doctorConsultation = new Thread(ConsultationSelectionProcess);
-            DoctorThreads.Add(doctorConsultation);
-            doctorConsultation.Start();
+            Thread doctorConsultationThread = new Thread(ConsultationSelectionProcess);
+            DoctorThreads.Add(doctorConsultationThread);
+            doctorConsultationThread.Start();
         }
 
         for (int i = 1; i <= totalPatients; i++)
@@ -58,7 +67,18 @@ public class PriorityProgram
 
         foreach (Thread diagnostic in Hospital.DiagnosticThreads) diagnostic.Join();
 
+        lock (Statistics.statslock)
+        {
+            Monitor.PulseAll(Statistics.statslock);
+        }
+
+        DateTime endSession = DateTime.Now;
+        Statistics.totalSessionTime = endSession - startSession;
+
+        Statistics.CalculateStats();
+
         ConsoleView.ShowExitMessage();
+        ConsoleView.ShowStatMessage();
     }
 
 
@@ -82,7 +102,19 @@ public class PriorityProgram
 
             if (patient != null)
             {
+                if (patient.RequiresDiagnostic)
+                {
+                    patient.DiagnosticTicket = Hospital.diagnosticTicketTurn.GetTicket();
+                    Hospital.DiagnosticQueue.Add(patient);
+                }
+
                 PriorityPatientProcess(patient);
+
+                lock (Statistics.statslock)
+                {
+                    Statistics.statsPatientList.Enqueue(patient);
+                    Monitor.Pulse(Statistics.statslock);
+                }
 
                 lock (consultationLock)
                 {
@@ -97,16 +129,11 @@ public class PriorityProgram
     public static void PriorityPatientProcess(Patient patient)
     {
         Hospital.consultationSem.Wait();
+        patient.PauseWaitingTimer();
         Doctor assignedDoctor = Doctor.AssignDoctor();
 
         patient.Status = PatientStatus.InConsultation;
         ConsoleView.ShowHospitalStatusMessage(patient, Doctor: assignedDoctor, showPriorityMessage: true);
-
-        if (patient.RequiresDiagnostic)
-        {
-            patient.DiagnosticTicket = Hospital.diagnosticTicketTurn.GetTicket();
-            Hospital.DiagnosticQueue.Add(patient);
-        }
 
         Thread.Sleep(patient.ConsultationTime * 1000);
         
@@ -118,10 +145,14 @@ public class PriorityProgram
 
         if (patient.RequiresDiagnostic)
         {
+            patient.ResumeWaitingTimer();
+
             lock (Hospital.queueLock)
             {
                 Monitor.PulseAll(Hospital.queueLock);
             }
+        } else{
+            patient.StopWaitingTimer();
         }
     }
 }

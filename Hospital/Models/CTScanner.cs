@@ -15,6 +15,7 @@ public class CTScanner
 
     // Common variables
     static readonly object locker = new object();
+    private static Random rnd = new Random();
 
 
     /// <summary>
@@ -46,7 +47,7 @@ public class CTScanner
 
                 if (availableCTScanner.Count > 0)
                 {
-                    selectedCTScanner = availableCTScanner[Hospital.rnd.Next(availableCTScanner.Count)];
+                    selectedCTScanner = availableCTScanner[rnd.Next(availableCTScanner.Count)];
                     selectedCTScanner.IsAvailable = false;
                     return selectedCTScanner;
                 }

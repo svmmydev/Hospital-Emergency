@@ -16,7 +16,25 @@ public static class ConsoleView
     {
         Console.WriteLine("\n-----------------------------------------------------------------");
         Console.WriteLine("# ALL PATIENTS HAVE BEEN TREATED #\n");
-        Console.WriteLine("\nClosing program..\n");
+    }
+
+
+    public static void ShowStatMessage()
+    {
+        Console.WriteLine(
+            "\n# STATISTICS #" +
+            "\n-----------------------------------------------------------------\n" +
+            "\nPatients treated:" +
+            $"\n -Emergency: {Statistics.totalEmergencyPatients}" +
+            $"\n -Urgency: {Statistics.totalUrgencyPatients}" +
+            $"\n -General: {Statistics.totalGeneralPatients}" +
+            "\n\nAverage waiting time:" +
+            $"\n -Emergency: {Statistics.averageEmergencyWaitingTime}" +
+            $"\n -Urgency: {Statistics.averageUrgencyWaitingTime}" +
+            $"\n -General: {Statistics.averageGeneralWaitingTime}" +
+            $"\n\nAverage diagnostic scanner usage: {Statistics.averageScannerUsedTime}%" +
+            "\n\n-----------------------------------------------------------------\n"
+        );
     }
 
 

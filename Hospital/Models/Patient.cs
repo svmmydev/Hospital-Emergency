@@ -53,8 +53,7 @@ public class Patient
     /// Initializes a new instance of the patient class.
     /// </summary>
     /// <param name="HospitalArrival">The patient's waiting time.</param>
-    /// <param name="startTimer">The patient's waiting timer.</param>
-    public Patient (int HospitalArrival, bool startTimer = false)
+    public Patient (int HospitalArrival)
     {
         Id = RandomIdGenerator.GetUniqueId(1000);
         ConsultationTicket = TicketProgram.consultationTicketTurn.GetTicket(); // Optional (Ej2 Tarea3)
@@ -63,11 +62,7 @@ public class Patient
         ConsultationTime = Hospital.rnd.Next(5,16);
         RequiresDiagnostic = Hospital.rnd.Next(0,2) == 1;
         Priority = (PatientPriority)Hospital.rnd.Next(1,4);
-
-        if (startTimer)
-        {
-            waitingTimer = new Timer(IncrementWaitingTime, null, 0, 1000);
-        }
+        waitingTimer = new Timer(IncrementWaitingTime, null, 0, 1000);
     }
 
 

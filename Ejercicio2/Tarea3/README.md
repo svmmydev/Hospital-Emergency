@@ -42,7 +42,7 @@ Para esta tarea, se buscan los siguientes objetivos:
 
 <br>
 
-![Imagen de la prueba](../../Resources/prueba-ejercicio1-tarea3-2.png)
+![Imagen de la prueba](../../Resources/prueba-ejercicio2-tarea3-2.png)
 
 </div>
 
@@ -63,6 +63,6 @@ Para esta tarea, se buscan los siguientes objetivos:
 <div align="center">
   
 ### Prueba
-![Imagen de la prueba](../../Resources/prueba-ejercicio1-tarea3-3.png)
+![Imagen de la prueba](../../Resources/prueba-ejercicio2-tarea3-3.png)
 
 </div>

@@ -50,7 +50,8 @@ Para esta tarea, se buscan los siguientes objetivos:
 > <details>
 >  <summary>SPOILER: haz clic para ver</summary>
 > <br>
-> Para esta Tarea, después de realizar la siguiente (Tarea 3) decidí implementarle también el sistema de Tickets, permitiendo forzar aún más el orden de llegada al Hospital. Realmente no hace falta este método porque con el Scanner.Wait() es más que suficiente, pero aun así, cuando leas la explicación > de la Tarea que sigue, entenderás por qué decidí implementarla.
+> Para esta Tarea, después de realizar la siguiente (Tarea 3) decidí implementarle también el sistema de Tickets, permitiendo forzar aún más el orden de llegada al Hospital. Realmente no hace falta este método porque con el Scanner.Wait() es más que suficiente, pero aun así, cuando leas la explicación de la
+> Tarea que sigue, entenderás por qué decidí implementarla.
 > </details>
 
 <br>

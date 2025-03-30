@@ -21,7 +21,10 @@ Para esta tarea, se buscan los siguientes objetivos:
 > 
 > En cada Program.cs de estas tareas se llama a su método principal y se le indica por parámetro la cantidad de pacientes deseada para cada simulación.
 > 
-> Aun así, dejaré comentado por bloques separados el código de cada Tarea solicitada.
+> Aun así, dejaré comentado por bloques separados el código de cada Tarea dentro del archivo `.cs`, y de esa manera, podrás descomentar/comentar según la Tarea solicitada.
+>
+> También cabe mencionar que en las siguiente capturas, hay una errata que ya he solucionado después de ir rellenando el Word. Cuando los pacientes acababan la consulta y necesitaban diagnóstico, en ese mensaje de estado, el estado aparecía como "Finished" en lugar de "WaitingDiagnostic". Ya está fixeado y
+> funciona perfectamente.
 
 <br>
 
@@ -92,6 +95,13 @@ Para esta tarea, se buscan los siguientes objetivos:
 > “infinitos” productor/consumidor es perfecto.
 > 
 > A pesar del desafío de la práctica y los “dolores de cabeza” que me ha dado, he quedado muy satisfecho con el resultado. Me gusta la concurrencia, la programación cobra mucho más sentido.
+
+<br>
+
+> [!TIP]
+> Te invito a que pruebes el código de la Tarea que más te apetezca. Recomiendo ejecutar esta misma Tarea 1 del Ejercicio 3 ya que tiene TODO implementado en orden y así checkear que todo funciona como se espera.
+>
+> Como bien menciono en la anotación de arriba, se puede decomentar/comentar los bloques de código y así poder probar cada una de las tareas.
 
 <br>
 

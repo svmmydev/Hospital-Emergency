@@ -39,7 +39,7 @@ internal class Program
     /// <summary>
     /// Simulates the arrival of a patient and assigns them to a doctor for a consultation.
     /// </summary>
-    /// <param name="PatientId">The unique identifier of the arriving patient.</param>
+    /// <param name="arrivalOrderNumber">The unique identifier of the arriving patient.</param>
     /// <param name="ConsultationTime">Duration of the consultation.</param>
     private static void PatientProcess(int arrivalOrderNumber, int ConsultationTime)
     {

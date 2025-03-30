@@ -50,13 +50,15 @@ public class Patient
 
     
     /// <summary>
-    /// Initializes a new instance of the patient class.
+    /// Initializes a new instance of the "Patient" class with a unique ID, a consultation ticket,
+    /// the hospital arrival time, status, consultation time, diagnostic requirement, and priority of the patient.
+    /// A timer is also started to track the patient's waiting time.
     /// </summary>
-    /// <param name="HospitalArrival">The patient's waiting time.</param>
+    /// <param name="HospitalArrival">The patient's arrival time at the hospital.</param>
     public Patient (int HospitalArrival)
     {
         Id = RandomIdGenerator.GetUniqueId(1000);
-        ConsultationTicket = TicketProgram.consultationTicketTurn.GetTicket(); // Optional (Ej2 Tarea3)
+        ConsultationTicket = TicketProgram.consultationTicketTurn.GetTicket(); // Optional (Ejercicio 2: Tarea 2 y 3)
         this.HospitalArrival = HospitalArrival;
         Status = PatientStatus.WaitingConsultation;
         ConsultationTime = Hospital.rnd.Next(5,16);
@@ -107,6 +109,11 @@ public class Patient
     }
 
 
+    /// <summary>
+    /// Increments the patient's waiting time by 1 each time the timer elapses.
+    /// This method is called by the timer to track the passage of time while the patient is waiting.
+    /// </summary>
+    /// <param name="state">An optional state object that is passed by the timer (not used in this implementation).</param>
     private void IncrementWaitingTime(object? state)
     {
         WaitingTime++;

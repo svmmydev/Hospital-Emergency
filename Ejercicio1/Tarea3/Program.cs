@@ -21,7 +21,7 @@ internal class Program
     /// <summary>
     /// Simulates the arrival of a patient and assigns them to a doctor for a consultation.
     /// </summary>
-    /// <param name="Patient">The patient with all of his properties.</param>
+    /// <param name="Patient">The patient to be processed for consultation.</param>
     private static void PatientProcess(Patient patient)
     {
         Hospital.consultationSem.Wait();

@@ -89,7 +89,8 @@ public class TicketProgram
 
         Thread.Sleep(patient.ConsultationTime * 1000);
         
-        patient.Status = PatientStatus.Finished;
+        if (patient.RequiresDiagnostic) patient.Status = PatientStatus.WaitingDiagnostic;
+        else patient.Status = PatientStatus.Finished;
         ConsoleView.ShowHospitalStatusMessage(patient, Doctor: assignedDoctor);
 
         assignedDoctor.ReleaseDoctor();

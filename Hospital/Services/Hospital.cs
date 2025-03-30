@@ -52,7 +52,7 @@ public static class Hospital
             lock (queueLock)
             {
                 // Wait until the patient's status is "Finished" before proceeding with diagnostics
-                while (patient.Status != PatientStatus.Finished)
+                while (patient.Status != PatientStatus.WaitingDiagnostic)
                 {
                     Monitor.Wait(queueLock); // Thread waiting spot
                 }
@@ -60,10 +60,9 @@ public static class Hospital
 
             scannerSem.Wait();
             patient.PauseWaitingTimer();
-            
             CTScanner assignedCTScanner = CTScanner.AssignCTScanner();
+            patient.RequiresDiagnostic = false; // Already being treated, helps the console message
 
-            patient.Status = PatientStatus.WaitingDiagnostic;
             ConsoleView.ShowHospitalStatusMessage(patient, CTScanner: assignedCTScanner);
 
             diagnosticTicketTurn.Next();
@@ -76,7 +75,8 @@ public static class Hospital
             double scannerUsageTime = (DateTime.Now - startUsage).TotalSeconds;
             Statistics.DiagnosticUsage(scannerUsageTime);
 
-            patient.RequiresDiagnostic = false;
+            patient.DiagnosticCompleted = true;
+            patient.Status = PatientStatus.Finished;
             ConsoleView.ShowHospitalStatusMessage(patient, CTScanner: assignedCTScanner);
 
             assignedCTScanner.ReleaseCTScanner();

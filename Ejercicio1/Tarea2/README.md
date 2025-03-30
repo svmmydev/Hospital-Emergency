@@ -32,6 +32,8 @@ Para esta tarea, se buscan los siguientes objetivos:
 
 </div>
 
+<br>
+
 > [!WARNING]
 > La consola de la imagen no va a coincidir con el resultado final del proyecto. Esta forma de visualizar los datos se ha establecido para mostrar toda la información posible para entender el flujo del programa, así como para desarrollar su explicación.
 > 

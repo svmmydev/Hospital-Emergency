@@ -90,11 +90,11 @@ Para esta tarea, se buscan los siguientes objetivos:
 <div align="center">
 
 ### Pruebas
-![Imagen de la prueba](../../Resources/prueba-ejercicio2-tarea4-2.png)
+![Imagen de la prueba](../../Resources/prueba-ejercicio2-tarea4-3.png)
 
 <br>
 
-![Imagen de la prueba](../../Resources/prueba-ejercicio2-tarea4-2.png)
+![Imagen de la prueba](../../Resources/prueba-ejercicio2-tarea4-4.png)
 
 </div>
 

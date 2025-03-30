@@ -27,9 +27,6 @@ Para esta tarea, se buscan los siguientes objetivos:
 > 
 > Se están ejecutando 5 hilos diferentes. Dado que tenemos el hilo principal de la aplicación, y otros cuatro que se generan mediante un "for", obetenemos un total de 5 hilos en ejecución.
 
-### Prueba
-![Imagen de prueba de pregunta 1](../../Resources/prueba-ejercicio1-tarea1-p1.png)
-
 <br>
 
 ### Pregunta 2
@@ -51,9 +48,6 @@ Para esta tarea, se buscan los siguientes objetivos:
 > Conforme se va acercando el final de la práctica, te das cuenta de que este método no es lo más óptimo para crear los pacientes y tratarlos. Un hilo por cada paciente no es adecuado, mejor usar el método Productor/Consumidor.
 > </details>
 
-### Prueba
-![Imagen de prueba de pregunta 2](../../Resources/prueba-ejercicio1-tarea1-p2.png)
-
 <br>
 
 ### Pregunta 3
@@ -64,5 +58,7 @@ Para esta tarea, se buscan los siguientes objetivos:
 > 
 > En el caso de la salida, creo que es indiferente el método que usemos, si el de la creación por intervalo o el de una lista de hilos. Tanto para uno como para otro, se pide un intervalo de 2 segundos para la ejecución y 10 segundos de “consulta”, por lo tanto, siempre saldrá en primer lugar el mismo paciente que entró en primer lugar. Si no tuviésemos un intervalo de ejecución ni para entrar ni para salir, podría salir en primer lugar cualquiera de los 4 pacientes.
 
+<br>
+
 ### Prueba
-![Imagen de prueba de pregunta 3](../../Resources/prueba-ejercicio1-tarea1-p3.png)
+![Imagen de la prueba](../../Resources/prueba-ejercicio1-tarea1.png)

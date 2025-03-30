@@ -33,16 +33,15 @@ internal class Program
         ConsoleView.ShowHospitalStatusMessage(patient, Doctor: assignedDoctor);
         Thread.Sleep(patient.ConsultationTime * 1000);
 
-        patient.Status = PatientStatus.Finished;
+        if (patient.RequiresDiagnostic) patient.Status = PatientStatus.WaitingDiagnostic;
+        else patient.Status = PatientStatus.Finished;
+
         ConsoleView.ShowHospitalStatusMessage(patient, Doctor: assignedDoctor);
 
         assignedDoctor.ReleaseDoctor();
         Hospital.consultationSem.Release();
 
-        if (patient.RequiresDiagnostic)
-        {
-            DiagnosticProcess(patient);
-        }
+        if (patient.RequiresDiagnostic) DiagnosticProcess(patient);
     }
 
 
@@ -55,13 +54,14 @@ internal class Program
     {
         Hospital.scannerSem.Wait();
         CTScanner assignedCTScanner = CTScanner.AssignCTScanner();
+        patient.RequiresDiagnostic = false; // Already being treated, helps the console message
 
-        patient.Status = PatientStatus.WaitingDiagnostic;
         ConsoleView.ShowHospitalStatusMessage(patient, CTScanner: assignedCTScanner);
 
         Thread.Sleep(Hospital.medicalTestTime);
 
-        patient.RequiresDiagnostic = false;
+        patient.DiagnosticCompleted = true;
+        patient.Status = PatientStatus.Finished;
         ConsoleView.ShowHospitalStatusMessage(patient, CTScanner: assignedCTScanner);
         
         assignedCTScanner.ReleaseCTScanner();

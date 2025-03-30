@@ -28,9 +28,17 @@ public class Statistics
     /// </summary>
     public static void CalculateStats()
     {
-        averageEmergencyWaitingTime = totalEmergencyPatients > 0 ? totalEmergencyWaitingTime / totalEmergencyPatients : 0;
-        averageUrgencyWaitingTime = totalUrgencyPatients > 0 ? totalUrgencyWaitingTime / totalUrgencyPatients : 0;
-        averageGeneralWaitingTime = totalGeneralPatients > 0 ? totalGeneralWaitingTime / totalGeneralPatients : 0;
+        averageEmergencyWaitingTime = totalEmergencyPatients > 0
+        ? (int)Math.Round(totalEmergencyWaitingTime / (double)totalEmergencyPatients)
+        : 0;
+
+        averageUrgencyWaitingTime = totalUrgencyPatients > 0
+        ? (int)Math.Round(totalUrgencyWaitingTime / (double)totalUrgencyPatients)
+        : 0;
+
+        averageGeneralWaitingTime = totalGeneralPatients > 0
+        ? (int)Math.Round(totalGeneralWaitingTime / (double)totalGeneralPatients)
+        : 0;
 
         averageScannerUsedTime = totalSessionTime.TotalSeconds > 0
         ? (int)(totalScannerUsageTime / (Hospital.CTScannerList.Count * totalSessionTime.TotalSeconds) * 100)

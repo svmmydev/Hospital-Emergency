@@ -42,6 +42,7 @@ public class Patient
     public int DiagnosticTicket {get; set;}
     public int ConsultationTicket {get; private set;}
     public PatientPriority Priority {get; private set;}
+    public bool DiagnosticCompleted {get; set;}
 
 
     // Common variables
@@ -64,6 +65,7 @@ public class Patient
         ConsultationTime = Hospital.rnd.Next(5,16);
         RequiresDiagnostic = Hospital.rnd.Next(0,2) == 1;
         Priority = (PatientPriority)Hospital.rnd.Next(1,4);
+        DiagnosticCompleted = false;
         waitingTimer = new Timer(IncrementWaitingTime, null, 0, 1000);
     }
 

@@ -16,6 +16,8 @@ internal class Program
     {
         ConsoleView.ShowWelcomeMessage();
 
+        Hospital.CreateDoctors();
+
         // Simulates the arrival of patients at intervals.
         for (int i = 1; i <= 4; i++)
         {
@@ -55,5 +57,4 @@ internal class Program
         assignedDoctor.ReleaseDoctor();
         Hospital.consultationSem.Release();
     }
-
 }

@@ -75,16 +75,30 @@ public static class ConsoleView
                             $"| Waiting duration: {patient.WaitingTime}s";
                 break;
             case PatientStatus.Finished:
-                statusMsg = $"| Consultation duration: {patient.ConsultationTime}s " +
-                            $"({Doctor?.ReferenceName} is now free)";
+                if (patient.DiagnosticCompleted)
+                {
+                    statusMsg = $"| Diagnostic completed ({CTScanner?.ReferenceName} is now free)";
+                }
+                else
+                {
+                    statusMsg = $"| Consultation duration: {patient.ConsultationTime}s " +
+                                $"({Doctor?.ReferenceName} is now free)";
+                }
 
-                if (patient.RequiresDiagnostic) statusMsg += $" | Waiting for a diagnostic CT Scanner test";
-                
                 break;
             case PatientStatus.WaitingDiagnostic:
-                if (patient.RequiresDiagnostic) statusMsg = $"| Entering {CTScanner?.ReferenceName}";
-                else statusMsg = $"| Diagnostic completed ({CTScanner?.ReferenceName} is now free)";
+                if (patient.RequiresDiagnostic && !patient.DiagnosticCompleted)
+                {
+                    statusMsg = $"| Consultation duration: {patient.ConsultationTime}s " +
+                                $"({Doctor?.ReferenceName} is now free)";
 
+                    statusMsg += $" | Waiting for a diagnostic CT Scanner test";
+                }
+                else
+                {
+                    statusMsg = $"| Entering {CTScanner?.ReferenceName}";
+                }
+                
                 break;
             default:
                 statusMsg = "";

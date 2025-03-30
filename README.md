@@ -14,7 +14,7 @@ Finalmente, cuando todos los pacientes sean procesados, en el último punto de l
 
 <br>
 
-![Imagen estética del programa](resources/esteticaprograma.png)
+![Imagen estética del programa](Resources/esteticaprograma.png)
 
 <br>
 

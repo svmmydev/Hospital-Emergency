@@ -16,6 +16,8 @@ Para esta tarea, se buscan los siguientes objetivos:
   - Tiempo entre cambios de estado.
 - En cada cambio de estado debe visualizarse el cambio.
 
+<br>
+
 ```
 Ejemplo de visualización:
 

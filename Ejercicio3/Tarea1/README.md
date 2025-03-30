@@ -29,7 +29,7 @@ Para esta tarea, se buscan los siguientes objetivos:
 
 > Mediante la llamada desde el código principal de la Tarea 5, por ejemplo, se puede observar cómo se le introduce por parámetro la cantidad de pacientes que se desean procesar o simular.
 > 
-> Dentro de ese método, podemo encontrar el siguiente for, que itera generando dichos pacientes:
+> Dentro de ese método, podemos encontrar el siguiente for, que itera generando dichos pacientes:
 
 <br>
 

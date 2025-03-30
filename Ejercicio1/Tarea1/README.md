@@ -19,6 +19,8 @@ Para esta tarea, se buscan los siguientes objetivos:
 - Cada vez que llega un paciente se mostrará por pantalla un mensaje con su número de llegada.
 - Cada vez que entre en consulta también mostrará un mensaje por pantalla.
 
+<br>
+
 ### Pregunta 1
 
 `¿Cuántos hilos se están ejecutando en este programa? Explica tu respuesta`

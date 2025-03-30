@@ -125,6 +125,6 @@ Para esta tarea, se buscan los siguientes objetivos:
 <div align="center">
 
 ### Prueba
-![Imagen de la prueba](../../Resources/prueba-ejercicio2-tarea4-3.png)
+![Imagen de la prueba](../../Resources/prueba-ejercicio2-tarea4-5.png)
 
 </div>

@@ -62,5 +62,9 @@ Para esta tarea, se buscan los siguientes objetivos:
 
 <br>
 
+<div align="center">
+
 ### Prueba
 ![Imagen de la prueba](../../Resources/prueba-ejercicio1-tarea1.png)
+
+</div>

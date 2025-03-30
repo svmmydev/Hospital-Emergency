@@ -3,8 +3,15 @@ namespace HospitalUrgencias.Hospital.Helpers;
 using HospitalUrgencias.Hospital.Models;
 using HospitalUrgencias.Hospital.Services;
 
+
+/// <summary>
+/// Represents the UI of the simultaion through the console.
+/// </summary>
 public static class ConsoleView
 {
+    /// <summary>
+    /// Shows a welcome message.
+    /// </summary>
     public static void ShowWelcomeMessage()
     {
         Console.WriteLine("\n# PATIENTS ARE ENTERING THE HOSPITAL #");
@@ -13,13 +20,19 @@ public static class ConsoleView
     }
 
 
+    /// <summary>
+    /// Shows an ending program message.
+    /// </summary>
     public static void ShowExitMessage()
     {
         Console.WriteLine("\n-----------------------------------------------------------------");
         Console.WriteLine("# ALL PATIENTS HAVE BEEN TREATED #\n");
     }
 
-
+    
+    /// <summary>
+    /// Shows a block with all required statistics.
+    /// </summary>
     public static void ShowStatMessage()
     {
         Console.WriteLine(
@@ -39,6 +52,14 @@ public static class ConsoleView
     }
 
 
+    /// <summary>
+    /// Displays the current status of a patient, including their consultation status, assigned doctor, 
+    /// diagnostic status, and priority information (if requested).
+    /// </summary>
+    /// <param name="patient"></param>
+    /// <param name="Doctor"></param>
+    /// <param name="CTScanner"></param>
+    /// <param name="showPriorityMessage"></param>
     public static void ShowHospitalStatusMessage(Patient patient, Doctor? Doctor = null, CTScanner? CTScanner = null, bool showPriorityMessage = false)
     {
         string statusMsg;

@@ -17,6 +17,11 @@ internal class Program
         TicketProgram.HospitalTicketProgram(PatientProcess, 4);
     }
 
+
+    /// <summary>
+    /// Processes a patient's consultation by assigning a doctor and, if necessary, initiating the diagnostic process.
+    /// </summary>
+    /// <param name="patient">The patient to be processed for consultation.</param>
     private static void PatientProcess(Patient patient)
     {
         ConsoleView.ShowHospitalStatusMessage(patient);
@@ -36,18 +41,30 @@ internal class Program
 
         if (patient.RequiresDiagnostic)
         {
-            Hospital.scannerSem.Wait();
-            CTScanner assignedCTScanner = CTScanner.AssignCTScanner();
-
-            patient.Status = PatientStatus.WaitingDiagnostic;
-            ConsoleView.ShowHospitalStatusMessage(patient, CTScanner: assignedCTScanner);
-            Thread.Sleep(Hospital.medicalTestTime);
-
-            patient.RequiresDiagnostic = false;
-            ConsoleView.ShowHospitalStatusMessage(patient, CTScanner: assignedCTScanner);
-            
-            assignedCTScanner.ReleaseCTScanner();
-            Hospital.scannerSem.Release();
+            DiagnosticProcess(patient);
         }
+    }
+
+
+    /// <summary>
+    /// Handles the diagnostic process for a patient, including assigning a CT scanner,
+    /// simulating the diagnostic procedure, and updating the patient's status.
+    /// </summary>
+    /// <param name="patient">The patient to be processed for diagnostic testing.</param>
+    private static void DiagnosticProcess(Patient patient)
+    {
+        Hospital.scannerSem.Wait();
+        CTScanner assignedCTScanner = CTScanner.AssignCTScanner();
+
+        patient.Status = PatientStatus.WaitingDiagnostic;
+        ConsoleView.ShowHospitalStatusMessage(patient, CTScanner: assignedCTScanner);
+
+        Thread.Sleep(Hospital.medicalTestTime);
+
+        patient.RequiresDiagnostic = false;
+        ConsoleView.ShowHospitalStatusMessage(patient, CTScanner: assignedCTScanner);
+        
+        assignedCTScanner.ReleaseCTScanner();
+        Hospital.scannerSem.Release();
     }
 }

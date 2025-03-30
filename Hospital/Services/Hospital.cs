@@ -95,6 +95,7 @@ public static class Hospital
     /// <summary>
     /// Creates a specified number of doctors and adds them to the list of doctors in the hospital.
     /// Each doctor is assigned a unique ID starting from 1 to the specified number of doctors.
+    /// The number of Doctors to add is defined in the class as a property.
     /// </summary>
     public static void CreateDoctors()
     {

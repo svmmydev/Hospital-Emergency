@@ -19,7 +19,11 @@ Para esta tarea, se buscan los siguientes objetivos:
 
 <div align="center">
 
-### Prueba
+### Pruebas
+![Imagen de la prueba](../../Resources/prueba-ejercicio2-tarea5-5.png)
+
+<br>
+
 ![Imagen de la prueba](../../Resources/prueba-ejercicio2-tarea5.png)
 
 </div>

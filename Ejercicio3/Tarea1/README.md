@@ -88,7 +88,7 @@ Para esta tarea, se buscan los siguientes objetivos:
 > 
 > Pero para la siguiente tarea (#4) la cosa se me complicó bastante, ya que con el sistema de tickets se me complicaba bastante el código. Debía crear 3 listas e implementar una máquina de tickets para cada lista. Me parecía ya algo más.. ¿redundante? Y aquí es donde entró en juego la PriorityQueue.
 > 
-> Básicamente está declara y definida para esta tarea, es perfecta. Pero con ello conlleva una serie de implementaciones extra. Ahora ya el sistema de tickets se complica, porque para una priority queue ¿cómo vas a meter por ticket a pacientes que podrían salir antes aún llegando más tarde? debido a la
+> Básicamente está declarada y definida para esta tarea, es perfecta. Pero con ello conlleva una serie de implementaciones extra. Ahora ya el sistema de tickets se complica, porque para una priority queue ¿cómo vas a meter por ticket a pacientes que podrían salir antes aún llegando más tarde? debido a la
 > prioridad claro..
 > 
 > Así que aquí me quedó claro que los pacientes no podían ser hilos.. además, 20 hilos ya choca un poco ¿no? Así que, como digo, aquí mi cerebro entendió que se trata de un productor/consumidor como una casa. Claro, al principio eran solo 4 pacientes, aún tenía algo de sentido. Pero sin duda, para pacientes
